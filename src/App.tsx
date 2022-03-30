@@ -1,9 +1,13 @@
 // src/app.tsx
 import React from "react";
-import { Button } from "antd";
+import BaseLayouts from "./layouts";
+import { DndProvider } from "react-dnd";
+import { HTML5Backend } from "react-dnd-html5-backend";
 
-const App: React.FC<any> = () => <div>
-  <Button type="primary">aa</Button>
-</div>;
+const App: React.FC<any> = () => (
+  <DndProvider backend={HTML5Backend}>
+    <BaseLayouts />
+  </DndProvider>
+);
 
 export default App;

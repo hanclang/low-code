@@ -11,7 +11,7 @@ const Panel = Collapse.Panel;
 
 const BaseLayouts: React.FC<any> = () => (
   <Layout className={styles.layout}>
-    <Sider width={500}>
+    <Sider width={300}>
       <Collapse>
         {antComponents.map((group, i) => {
           return (

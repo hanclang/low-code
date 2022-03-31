@@ -1,7 +1,7 @@
 import React from "react";
 import { Layout, Collapse } from "antd";
 
-import antComponents from "../pages/antdComponents";
+import antComponents from "../pages/componentsType";
 
 import styles from "./index.less";
 import { DragTag, DropContainer } from "src/components";

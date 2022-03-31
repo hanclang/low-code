@@ -6,6 +6,8 @@ import { layout } from "./constant";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/models/store";
 
+import antd from "src/pages/antdComponents";
+
 const DropContainer: React.FC<any> = () => {
   const [{ canDrop, isOver }, drop] = useDrop(() => ({
     accept: "tag",
@@ -28,7 +30,9 @@ const DropContainer: React.FC<any> = () => {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     const dom: HTMLDivElement = e.target as HTMLDivElement;
+
     const { width, height } = dom.getBoundingClientRect();
+    console.log(width, height, dom.offsetTop, dom.offsetLeft)
     return {
       width,
       height,
@@ -37,9 +41,52 @@ const DropContainer: React.FC<any> = () => {
     };
   };
 
+  const getComponent = (componentNames: string[]): typeof antd => {
+    if (componentNames.length === 1) {
+      return antd[componentNames[0]];
+    } else {
+      const lastT = componentNames.pop()!;
+      const com = getComponent(componentNames)[lastT];
+      return com;
+    }
+  };
+
+  const renderDragComponents = (componentDatas: any[]): React.ReactNode => {
+
+    return componentDatas.map((d: any, i: number) => {
+
+      let component;
+      component = getComponent(d.type.split("."));
+
+      let realProps = d.props ? { ...d.props, key: d.id } : {};
+
+      for (let key in realProps) {
+        if (
+          typeof realProps[key] === "object" &&
+          realProps[key].type === "relative"
+        ) {
+          realProps[key] = realProps[realProps[key].target]
+            ? realProps[key].true
+            : realProps[key].false;
+        }
+      }
+
+      return React.createElement(
+        component,
+        realProps,
+        d.props.content
+          ? [d.props.content]
+          : d.childrens
+          ? renderDragComponents(d.childrens)
+          : null
+      );
+    });
+  };
+
   return (
     <div
-      onMouseMove={(e) => {
+      onMouseOver={(e) => {
+        e.stopPropagation();
         const { width, height, top, left } = getBoundingClientRect(e);
         setMovingLayout({
           width,
@@ -94,10 +141,9 @@ const DropContainer: React.FC<any> = () => {
       </div>
       {/* TODO: 在面板里的组件怎么实现排序, 组件渲染 */}
       <div ref={drop} className={classNames(styles.dropContainer)}>
-        <div style={{ display: "flex", padding: 8 }}>
-          <div style={{ flex: 1 }}>2</div>
-          <div style={{ flex: 1 }}>1</div>
-        </div>
+        {
+          renderDragComponents(dragData)
+        }
       </div>
     </div>
   );

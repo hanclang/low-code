@@ -7,7 +7,6 @@
     width: 100%;
     height: 100%;
     position: relative;
-    z-index: 2;
   }
   .layoutBorder {
     top: 0;
@@ -16,6 +15,8 @@
     height: 100%;
     position: absolute;
     display: none;
+    z-index: 1000;
+    pointer-events:none;
     &.isMoving {
       display: block;
       background-color: rgb(24 144 255 / 8%);

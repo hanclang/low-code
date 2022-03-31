@@ -1,8 +1,6 @@
-import Button from "./Button";
+import * as antd from "antd";
 
-export default [
-  {
-    group_title: "表单容器和表单项",
-    components: [Button],
-  },
-];
+const antdClone: any = antd;
+Object.assign(antdClone, {a: 111});
+
+export default antdClone;

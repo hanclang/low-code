@@ -22,6 +22,7 @@ const BaseLayouts: React.FC<any> = () => (
               {group.components.map((component, i2) => {
                 return (
                   <DragTag
+                    draggingData={component}
                     tagName={`${component.type} ${component.title}`}
                     key={String(i) + i2}
                   />

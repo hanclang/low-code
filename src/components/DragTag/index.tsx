@@ -1,9 +1,13 @@
 import React from "react";
 import { useDrag } from "react-dnd";
 import { Tag } from "antd";
+import { setDragData } from "src/models/dragSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "src/models/store";
 
 interface DragTagProps {
   tagName: string;
+  draggingData: any
 }
 
 interface DropResult {
@@ -11,14 +15,18 @@ interface DropResult {
 }
 
 const DragTag: React.FC<DragTagProps> = (props) => {
-  const { tagName } = props;
+  const { tagName, draggingData } = props;
+
+  const dragData = useSelector((state: RootState) => state.drag.data);
+  const dispatch = useDispatch();
+
   const [collected, drag, dragPreview] = useDrag(() => ({
     type: "tag",
-    item: { tagName },
+    item: { draggingData },
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult<DropResult>();
-      if (item && dropResult) {
-        alert(`You dropped ${item.tagName} into ${dropResult.tagName}!`);
+      if (item) {
+        dispatch(setDragData(item.draggingData));
       }
     },
     collect: (monitor) => ({

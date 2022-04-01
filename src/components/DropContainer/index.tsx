@@ -1,9 +1,9 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import { useDrop } from "react-dnd";
 import classNames from "classnames";
 import styles from "./index.less";
 import { layout } from "./constant";
-import { useDispatch, useSelector } from "react-redux";
+import { useSelector } from "react-redux";
 import { RootState } from "src/models/store";
 
 import antd from "src/pages/antdComponents";
@@ -19,20 +19,34 @@ const DropContainer: React.FC<any> = () => {
   }));
 
   const dragData = useSelector((state: RootState) => state.drag.data);
-  const dispatch = useDispatch();
 
   const [isMoving, setIsMoving] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [movingLayout, setMovingLayout] = useState(layout); // 鼠标移动区域
   const [mouseDownLayout, setMouseDownLayout] = useState(layout); // 鼠标点击区域
 
+  let objResizeObserver = useMemo(
+    () =>
+      new ResizeObserver((entries) => {
+        let entry = entries[0];
+        const { width, height, top, left } = getBoundingClientRect(
+          entry as any
+        );
+        setMouseDownLayout({
+          width,
+          height,
+          top,
+          left,
+        });
+      }),
+    []
+  );
+
   const getBoundingClientRect = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     const dom: HTMLDivElement = e.target as HTMLDivElement;
-
     const { width, height } = dom.getBoundingClientRect();
-    console.log(width, height, dom.offsetTop, dom.offsetLeft)
     return {
       width,
       height,
@@ -52,9 +66,7 @@ const DropContainer: React.FC<any> = () => {
   };
 
   const renderDragComponents = (componentDatas: any[]): React.ReactNode => {
-
     return componentDatas.map((d: any, i: number) => {
-
       let component;
       component = getComponent(d.type.split("."));
 
@@ -97,6 +109,9 @@ const DropContainer: React.FC<any> = () => {
         setIsMoving(true);
       }}
       onMouseDown={(e) => {
+        objResizeObserver.disconnect();
+        // @ts-ignore
+        objResizeObserver.observe(e.target);
         const { width, height, top, left } = getBoundingClientRect(e);
         setMouseDownLayout({
           width,
@@ -141,9 +156,7 @@ const DropContainer: React.FC<any> = () => {
       </div>
       {/* TODO: 在面板里的组件怎么实现排序, 组件渲染 */}
       <div ref={drop} className={classNames(styles.dropContainer)}>
-        {
-          renderDragComponents(dragData)
-        }
+        {renderDragComponents(dragData)}
       </div>
     </div>
   );

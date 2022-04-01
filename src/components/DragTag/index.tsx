@@ -4,8 +4,7 @@ import { Tag } from "antd";
 import { setDragData } from "src/models/dragSlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "src/models/store";
-
-import { cloneDeep, uniqueId } from "lodash-es";
+import { cloneDeep } from "lodash";
 
 interface DragTagProps {
   tagName: string;
@@ -28,7 +27,7 @@ const DragTag: React.FC<DragTagProps> = (props) => {
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult<DropResult>();
       if (item) {
-        dispatch(setDragData({...item.draggingData, id: uniqueId("tag")}));
+        dispatch(setDragData(cloneDeep(item.draggingData)));
       }
     },
     collect: (monitor) => ({

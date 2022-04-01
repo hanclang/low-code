@@ -3,8 +3,10 @@ import { useDrop } from "react-dnd";
 import classNames from "classnames";
 import styles from "./index.less";
 import { layout } from "./constant";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "src/models/store";
+
+import { setSelectComponents } from "src/models/dragSlice";
 
 import antd from "src/pages/antdComponents";
 
@@ -19,13 +21,32 @@ const DropContainer: React.FC<any> = () => {
   }));
 
   const dragData = useSelector((state: RootState) => state.drag.data);
+  const dispatch = useDispatch();
 
   const [isMoving, setIsMoving] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
   const [movingLayout, setMovingLayout] = useState(layout); // 鼠标移动区域
   const [mouseDownLayout, setMouseDownLayout] = useState(layout); // 鼠标点击区域
 
-  let objResizeObserver = useMemo(
+  // TODO: 代码优化
+  let movingResizeObserver = useMemo(
+    () =>
+      new ResizeObserver((entries) => {
+        let entry = entries[0];
+        const { width, height, top, left } = getBoundingClientRect(
+          entry as any
+        );
+        setMovingLayout({
+          width,
+          height,
+          top,
+          left,
+        });
+      }),
+    []
+  );
+
+  let mouseDownResizeObserver = useMemo(
     () =>
       new ResizeObserver((entries) => {
         let entry = entries[0];
@@ -83,6 +104,11 @@ const DropContainer: React.FC<any> = () => {
         }
       }
 
+      realProps.onClick = (e: React.MouseEvent) => {
+        e.stopPropagation();
+        dispatch(setSelectComponents(d));
+      };
+
       return React.createElement(
         component,
         realProps,
@@ -98,7 +124,9 @@ const DropContainer: React.FC<any> = () => {
   return (
     <div
       onMouseOver={(e) => {
-        e.stopPropagation();
+        movingResizeObserver.disconnect();
+        // @ts-ignore
+        movingResizeObserver.observe(e.target);
         const { width, height, top, left } = getBoundingClientRect(e);
         setMovingLayout({
           width,
@@ -109,9 +137,9 @@ const DropContainer: React.FC<any> = () => {
         setIsMoving(true);
       }}
       onMouseDown={(e) => {
-        objResizeObserver.disconnect();
+        mouseDownResizeObserver.disconnect();
         // @ts-ignore
-        objResizeObserver.observe(e.target);
+        mouseDownResizeObserver.observe(e.target);
         const { width, height, top, left } = getBoundingClientRect(e);
         setMouseDownLayout({
           width,

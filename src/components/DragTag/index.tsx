@@ -26,7 +26,7 @@ const DragTag: React.FC<DragTagProps> = (props) => {
     item: { draggingData },
     end: (item, monitor) => {
       const dropResult = monitor.getDropResult<DropResult>();
-      if (item) {
+      if (monitor.didDrop()) {
         dispatch(setDragData(cloneDeep(item.draggingData)));
       }
     },

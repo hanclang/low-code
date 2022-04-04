@@ -89,9 +89,20 @@ const DropContainer: React.FC<any> = () => {
   const renderDragComponents = (componentDatas: any[]): React.ReactNode => {
     return componentDatas.map((d: any, i: number) => {
       let component;
-      component = getComponent(d.type.split("."));
+
+      if (d.is_native) {
+        component = d.type;
+      } else {
+        component = getComponent(d.type.split("."));
+      }
 
       let realProps = d.props ? { ...d.props, key: d.id } : {};
+
+      if (d.can_place) {
+        realProps.className = realProps.className
+          ? styles.draggable + String(realProps.className)
+          : styles.draggable;
+      }
 
       for (let key in realProps) {
         if (
@@ -109,6 +120,26 @@ const DropContainer: React.FC<any> = () => {
         dispatch(setSelectComponents(d));
       };
 
+      // 不冒泡
+      realProps.onMouseOver = (e: any) => {
+        e.stopPropagation();
+        // dispatch(setSelectComponents(d));
+
+        movingResizeObserver.disconnect();
+        // @ts-ignore
+        movingResizeObserver.observe(e.currentTarget);
+        const { width, height, top, left } = getBoundingClientRect({
+          target: e.currentTarget,
+        } as any);
+        setMovingLayout({
+          width,
+          height,
+          top,
+          left,
+        });
+        setIsMoving(true);
+      };
+
       return React.createElement(
         component,
         realProps,
@@ -124,6 +155,7 @@ const DropContainer: React.FC<any> = () => {
   return (
     <div
       onMouseOver={(e) => {
+        e.stopPropagation();
         movingResizeObserver.disconnect();
         // @ts-ignore
         movingResizeObserver.observe(e.target);
@@ -149,7 +181,7 @@ const DropContainer: React.FC<any> = () => {
         });
         setIsMouseDown(true);
       }}
-      onMouseLeave={() => {
+      onMouseOut={() => {
         setIsMoving(false);
       }}
       className={classNames(styles.container)}
@@ -158,6 +190,7 @@ const DropContainer: React.FC<any> = () => {
       <div
         className={classNames(styles.layoutBorder, styles.layoutSelecting, {
           [styles.isMoving]: isMoving,
+          [styles.isOver]: isOver,
         })}
         style={{
           width: movingLayout.width,

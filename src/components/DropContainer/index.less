@@ -7,6 +7,7 @@
     width: 100%;
     height: 100%;
     position: relative;
+    padding: 6px;
   }
   .layoutBorder {
     top: 0;
@@ -17,7 +18,7 @@
     display: none;
     z-index: 1000;
     pointer-events:none;
-    &.isMoving {
+    &.isMoving, &.isOver {
       display: block;
       background-color: rgb(24 144 255 / 8%);
       border: 2px dashed #1890ff;
@@ -37,4 +38,7 @@
       border-radius: 2px;
     }
   }
+}
+.draggable {
+  border:1px dashed #ccbef7;
 }

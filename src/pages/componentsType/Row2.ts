@@ -1,6 +1,7 @@
 export default {
   type: "Row",
   title: "2列栅格",
+  can_place: true,
   childrens: [
     {
       type: "Col",

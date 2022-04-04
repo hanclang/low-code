@@ -26,7 +26,7 @@ const BaseLayouts: React.FC<any> = () => {
 
   return (
     <Layout className={styles.layout}>
-      <Sider width={300}>
+      <Sider width={300} className={styles.leftSider}>
         <Collapse>
           {antComponents.map((group, i) => {
             return (

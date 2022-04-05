@@ -55,6 +55,16 @@ export const dragSlice = createSlice({
       com.props[key] = value;
       state.selectComponents = com;
     },
+    updateChildren: (state, action: PayloadAction<any>) => {
+      const { id, dragData, value } = action.payload;
+      const com = findUpdateCom(state.data, id);
+      if (com.childrens) {
+        com.childrens.push(dragData);
+      } else {
+        com.childrens = [dragData];
+      }
+      setId(com.childrens);
+    },
     setSelectComponents: (state, action: PayloadAction<any>) => {
       state.selectComponents = action.payload;
     },
@@ -62,6 +72,6 @@ export const dragSlice = createSlice({
   extraReducers: {},
 });
 
-export const { setDragData, updateDragData, setSelectComponents } = dragSlice.actions;
+export const { setDragData, updateDragData, setSelectComponents, updateChildren } = dragSlice.actions;
 
 export default dragSlice.reducer;

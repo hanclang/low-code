@@ -9,14 +9,15 @@ import { RootState } from "src/models/store";
 import { setSelectComponents } from "src/models/dragSlice";
 
 import antd from "src/pages/antdComponents";
+import DropComponent from "../DropComponent";
 
 const DropContainer: React.FC<any> = () => {
-  const [{ canDrop, isOver }, drop] = useDrop(() => ({
+  const [{ isOverCurrent, isOver }, drop] = useDrop(() => ({
     accept: "tag",
-    drop: () => ({ tagName: "Dustbin" }),
+    // drop: () => ({ tagName: "Dustbin", id: '0' }),
     collect: (monitor) => ({
       isOver: monitor.isOver(),
-      canDrop: monitor.canDrop(),
+      isOverCurrent: monitor.isOver({ shallow: true }),
     }),
   }));
 
@@ -98,12 +99,6 @@ const DropContainer: React.FC<any> = () => {
 
       let realProps = d.props ? { ...d.props, key: d.id } : {};
 
-      if (d.can_place) {
-        realProps.className = realProps.className
-          ? styles.draggable + String(realProps.className)
-          : styles.draggable;
-      }
-
       for (let key in realProps) {
         if (
           typeof realProps[key] === "object" &&
@@ -140,7 +135,13 @@ const DropContainer: React.FC<any> = () => {
         setIsMoving(true);
       };
 
-      return React.createElement(
+      if (d.can_place) {
+        realProps.className = realProps.className
+          ? styles.draggable + String(realProps.className)
+          : styles.draggable;
+      }
+
+      const jsxElement = React.createElement(
         component,
         realProps,
         d.props.content
@@ -149,6 +150,16 @@ const DropContainer: React.FC<any> = () => {
           ? renderDragComponents(d.childrens)
           : null
       );
+
+      if (d.can_place) {
+        return (
+          <DropComponent id={d.id} key={d.id}>
+            {jsxElement}
+          </DropComponent>
+        );
+      } else {
+        return jsxElement;
+      }
     });
   };
 
@@ -190,7 +201,6 @@ const DropContainer: React.FC<any> = () => {
       <div
         className={classNames(styles.layoutBorder, styles.layoutSelecting, {
           [styles.isMoving]: isMoving,
-          [styles.isOver]: isOver,
         })}
         style={{
           width: movingLayout.width,
@@ -216,7 +226,11 @@ const DropContainer: React.FC<any> = () => {
         <div className={styles.borderAction}>Page</div>
       </div>
       {/* TODO: 在面板里的组件怎么实现排序, 组件渲染 */}
-      <div ref={drop} className={classNames(styles.dropContainer)}>
+      <div
+        ref={drop}
+        style={{ border: isOverCurrent ? "1px dashed red" : "" }}
+        className={classNames(styles.dropContainer)}
+      >
         {renderDragComponents(dragData)}
       </div>
     </div>

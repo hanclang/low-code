@@ -4,11 +4,13 @@ import { uniqueId } from "lodash-es";
 interface InitialState {
   data: any[];
   selectComponents: any;
+  mouseMoveCom: any;
 }
 
 const initialState: InitialState = {
   data: [],
   selectComponents: {},
+  mouseMoveCom: {},
 };
 
 /**
@@ -30,7 +32,7 @@ const findUpdateCom = (data: any[], id: string): any => {
   for (let i = 0; i < data.length; i++) {
     if (data[i].id === id) {
       com = data[i];
-      break ;
+      break;
     }
     if (data[i].childrens && Array.isArray(data[i].childrens)) {
       com = findUpdateCom(data[i].childrens, id);
@@ -68,10 +70,19 @@ export const dragSlice = createSlice({
     setSelectComponents: (state, action: PayloadAction<any>) => {
       state.selectComponents = action.payload;
     },
+    setMouseMoveCom: (state, action: PayloadAction<any>) => {
+      state.mouseMoveCom = action.payload;
+    },
   },
   extraReducers: {},
 });
 
-export const { setDragData, updateDragData, setSelectComponents, updateChildren } = dragSlice.actions;
+export const {
+  setDragData,
+  updateDragData,
+  setSelectComponents,
+  setMouseMoveCom,
+  updateChildren,
+} = dragSlice.actions;
 
 export default dragSlice.reducer;

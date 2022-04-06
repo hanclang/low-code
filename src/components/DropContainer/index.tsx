@@ -6,23 +6,40 @@ import { layout } from "./constant";
 import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "src/models/store";
 
-import { setSelectComponents } from "src/models/dragSlice";
+import {
+  setDragData,
+  setMouseMoveCom,
+  setSelectComponents,
+} from "src/models/dragSlice";
 
 import antd from "src/pages/antdComponents";
 import DropComponent from "../DropComponent";
+import { cloneDeep } from "lodash-es";
 
 const DropContainer: React.FC<any> = () => {
+  const dragData = useSelector((state: RootState) => state.drag.data);
+  const selectComponents = useSelector(
+    (state: RootState) => state.drag.selectComponents
+  );
+  const mouseMoveCom = useSelector(
+    (state: RootState) => state.drag.mouseMoveCom
+  );
+  const dispatch = useDispatch();
+
   const [{ isOverCurrent, isOver }, drop] = useDrop(() => ({
     accept: "tag",
-    // drop: () => ({ tagName: "Dustbin", id: '0' }),
+    drop: (item: { draggingData: any }, monitor) => {
+      const didDrop = monitor.didDrop();
+      if (didDrop) {
+        return;
+      }
+      dispatch(setDragData(cloneDeep(item.draggingData)));
+    },
     collect: (monitor) => ({
       isOver: monitor.isOver(),
       isOverCurrent: monitor.isOver({ shallow: true }),
     }),
   }));
-
-  const dragData = useSelector((state: RootState) => state.drag.data);
-  const dispatch = useDispatch();
 
   const [isMoving, setIsMoving] = useState(false);
   const [isMouseDown, setIsMouseDown] = useState(false);
@@ -68,12 +85,12 @@ const DropContainer: React.FC<any> = () => {
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
   ) => {
     const dom: HTMLDivElement = e.target as HTMLDivElement;
-    const { width, height } = dom.getBoundingClientRect();
+    const { width, height, top, left } = dom.getBoundingClientRect();
     return {
       width,
       height,
-      top: dom.offsetTop,
-      left: dom.offsetLeft,
+      top: top,
+      left: left,
     };
   };
 
@@ -110,15 +127,29 @@ const DropContainer: React.FC<any> = () => {
         }
       }
 
-      realProps.onClick = (e: React.MouseEvent) => {
+      realProps.onMouseDown = (e: React.MouseEvent) => {
         e.stopPropagation();
         dispatch(setSelectComponents(d));
+
+        mouseDownResizeObserver.disconnect();
+        // @ts-ignore
+        mouseDownResizeObserver.observe(e.currentTarget);
+        const { width, height, top, left } = getBoundingClientRect({
+          target: e.currentTarget,
+        } as any);
+        setMouseDownLayout({
+          width,
+          height,
+          top,
+          left,
+        });
+        setIsMouseDown(true);
       };
 
       // 不冒泡
       realProps.onMouseOver = (e: any) => {
         e.stopPropagation();
-        // dispatch(setSelectComponents(d));
+        dispatch(setMouseMoveCom(d));
 
         movingResizeObserver.disconnect();
         // @ts-ignore
@@ -167,6 +198,7 @@ const DropContainer: React.FC<any> = () => {
     <div
       onMouseOver={(e) => {
         e.stopPropagation();
+        dispatch(setMouseMoveCom({}));
         movingResizeObserver.disconnect();
         // @ts-ignore
         movingResizeObserver.observe(e.target);
@@ -209,7 +241,9 @@ const DropContainer: React.FC<any> = () => {
           left: movingLayout.left,
         }}
       >
-        <div className={styles.borderAction}>Page</div>
+        <div className={styles.borderAction}>
+          {mouseMoveCom.title || "Page"}
+        </div>
       </div>
       {/* 鼠标点击区域标识 */}
       <div
@@ -223,7 +257,9 @@ const DropContainer: React.FC<any> = () => {
           left: mouseDownLayout.left,
         }}
       >
-        <div className={styles.borderAction}>Page</div>
+        <div className={styles.borderAction}>
+          {selectComponents.title || "Page"}
+        </div>
       </div>
       {/* TODO: 在面板里的组件怎么实现排序, 组件渲染 */}
       <div

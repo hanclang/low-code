@@ -2,6 +2,8 @@
 
 在线预览地址：[https://hanclang.github.io/](https://hanclang.github.io/)
 
+![demo](https://raw.githubusercontent.com/hanclang/img-uploader/master/demo.png)
+
 有兴趣的可以一起讨论，还有很多没有完善
 
 + 组件库主要依赖antd4和自定义组件

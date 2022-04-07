@@ -33,7 +33,7 @@ const DragTag: React.FC<DragTagProps> = (props) => {
       handlerId: monitor.getHandlerId(),
     }),
   }));
-  return <Tag ref={drag}>{tagName}</Tag>;
+  return <Tag ref={drag} style={{marginBottom: 6}}>{tagName}</Tag>;
 };
 
 export default DragTag;

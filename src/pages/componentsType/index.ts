@@ -7,6 +7,7 @@ import div from "./div";
 import Row2 from "./Row2";
 import Row4 from "./Row4";
 import Row8 from "./Row8";
+import Divider from "./Divider";
 
 export default [
   {
@@ -21,6 +22,7 @@ export default [
       Layout_Header,
       Layout_Sider,
       Layout_Content,
+      Divider,
       {
         type: "div",
         title: "分割线",

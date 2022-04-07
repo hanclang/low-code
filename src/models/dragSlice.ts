@@ -52,9 +52,15 @@ export const dragSlice = createSlice({
     },
     // action: {id, value, key}
     updateDragData: (state, action: PayloadAction<any>) => {
-      const { id, key, value } = action.payload;
+      const { id, key, value, subKey } = action.payload;
       const com = findUpdateCom(state.data, id);
-      com.props[key] = value;
+      if (subKey) {
+        com.props[key] = {
+          [subKey]: value
+        };
+      } else {
+        com.props[key] = value;
+      }
       state.selectComponents = com;
     },
     updateChildren: (state, action: PayloadAction<any>) => {

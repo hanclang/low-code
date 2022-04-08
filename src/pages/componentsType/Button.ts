@@ -11,13 +11,21 @@ export default {
   config: {
     type: {
       text: "主题",
-      enum: ["primary", "default", "dashed", "danger"],
+      enum: ["primary", "default", "dashed", "danger", "link", "text"],
     },
     icon: {
       text: "图标",
     },
     content: {
       text: "文案",
+    },
+    size: {
+      text: "按钮大小",
+      enum: ["large", "middle", "small"]
+    },
+    shape: {
+      text: "按钮形状",
+      enum: ["default", "circle", "round"]
     },
     style: {
       width: {

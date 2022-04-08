@@ -1,6 +1,7 @@
 import { cloneDeep } from "lodash-es";
 import React from "react";
 import { useDrop } from "react-dnd";
+import ReactDOM from "react-dom";
 import { useDispatch } from "react-redux";
 import { updateChildren } from "src/models/dragSlice";
 
@@ -26,11 +27,29 @@ const DropComponent: React.FC<DropComponentProps> = ({ children, id }) => {
   }));
   // @ts-ignore
   const style = children?.props?.style || {};
-  // @ts-ignore
-  return React.cloneElement(children, {
-    ref: drop, // TODO: 函数组件的ref问题，如Layout组件是函数组件
-    style: { ...style, border: isOverCurrent ? "1px dashed red" : "" },
-  });
+
+
+  return <Wrapper dropRef={drop}>
+  {// @ts-ignore
+    React.cloneElement(children, {
+      style: { ...style, border: isOverCurrent ? "1px dashed red" : "" },
+    })
+  }
+  </Wrapper>
+  ;
 };
+
+// 包一层防止react-dnd获取不到dom实例
+class Wrapper extends React.PureComponent<any> {
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
+  componentDidMount() {
+    // eslint-disable-next-line react/no-find-dom-node
+    this.props.dropRef({current: ReactDOM.findDOMNode(this)});
+  }
+  // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
+  render() {
+    return this.props.children;
+  }
+}
 
 export default DropComponent;

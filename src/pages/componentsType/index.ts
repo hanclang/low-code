@@ -8,6 +8,8 @@ import Row2 from "./Row2";
 import Row4 from "./Row4";
 import Row8 from "./Row8";
 import Divider from "./Divider";
+import Switch from "./Switch";
+import Space from "./Space";
 
 export default [
   {
@@ -15,7 +17,7 @@ export default [
     components: [Row2, Row4, Row8],
   },
   {
-    group_title: "布局容器组件",
+    group_title: "布局",
     components: [
       div,
       Layout,
@@ -23,6 +25,7 @@ export default [
       Layout_Sider,
       Layout_Content,
       Divider,
+      Space,
       {
         type: "div",
         title: "分割线",
@@ -46,7 +49,11 @@ export default [
     ],
   },
   {
-    group_title: "表单容器和表单项",
+    group_title: "通用",
     components: [Button],
+  },
+  {
+    group_title: "数据录入",
+    components: [Switch],
   },
 ];

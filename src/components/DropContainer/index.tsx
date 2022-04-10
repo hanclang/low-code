@@ -128,7 +128,7 @@ const DropContainer: React.FC<any> = () => {
   const renderDragComponents = (componentDatas: any[]): React.ReactNode => {
     return componentDatas.map((d: any, i: number) => {
       let component;
-
+      if (d.hasDelete) return null;
       if (d.is_native) {
         component = d.type;
       } else {
@@ -235,7 +235,7 @@ const DropContainer: React.FC<any> = () => {
       onMouseDown={(e) => {
         // @ts-ignore
         mouseDownRef.current = null;
-        dispatch(setSelectComponents({}));
+        dispatch(setSelectComponents({id: "1245345"}));
         mouseDownResizeObserver.disconnect();
         // @ts-ignore
         mouseDownResizeObserver.observe(e.target, observerConfig);
@@ -272,7 +272,7 @@ const DropContainer: React.FC<any> = () => {
       {/* 鼠标点击区域标识 */}
       <div
         className={classNames(styles.layoutBorder, styles.layoutSelecting, {
-          [styles.isMouseDown]: isMouseDown,
+          [styles.isMouseDown]: isMouseDown && selectComponents.id,
         })}
         style={{
           width: mouseDownLayout.width,

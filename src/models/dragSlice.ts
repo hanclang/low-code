@@ -50,16 +50,30 @@ export const dragSlice = createSlice({
       state.data.push(action.payload);
       setId(state.data);
     },
-    // action: {id, value, key}
-    updateDragData: (state, action: PayloadAction<any>) => {
-      const { id, key, value, subKey } = action.payload;
+    resetDragData: (state) => {
+      state.data = [];
+    },
+    deleteDragComponent: (state, action: PayloadAction<any>) => {
+      const { id } = action.payload;
       const com = findUpdateCom(state.data, id);
-      if (subKey) {
-        com.props[key] = {
-          [subKey]: value
-        };
+      com.hasDelete = true;
+    },
+    // action: {id, value, key, type}
+    updateDragData: (state, action: PayloadAction<any>) => {
+      // type 转换输入类型
+      const { id, key, value, subKey, type } = action.payload;
+      const com = findUpdateCom(state.data, id);
+      let v;
+      if (type === "number") {
+        v = Number(value);
       } else {
-        com.props[key] = value;
+        v = value;
+      }
+      if (subKey) {
+        const style = com.props[key] || {};
+        com.props[key] = { ...style, [subKey]: v};
+      } else {
+        com.props[key] = v;
       }
       state.selectComponents = com;
     },
@@ -85,6 +99,8 @@ export const dragSlice = createSlice({
 
 export const {
   setDragData,
+  resetDragData,
+  deleteDragComponent,
   updateDragData,
   setSelectComponents,
   setMouseMoveCom,

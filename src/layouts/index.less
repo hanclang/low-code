@@ -4,6 +4,21 @@
     .ant-layout-content {
       padding: 16px;
     }
+    .ant-layout-header {
+      height: 48px;
+      background-color: #fff;
+      margin-bottom: 2px;
+      line-height: 1;
+      align-items: center;
+      display: flex;
+      justify-content: space-between;
+      padding: 0 15px;
+      .ant-btn {
+        height: 28px;
+        font-size: 12px;
+        padding: 4px 10px;
+      }
+    }
   }
 }
 
@@ -11,6 +26,12 @@
   :global {
     .ant-collapse-content > .ant-collapse-content-box {
       padding: 10px !important;
+    }
+    .ant-collapse > .ant-collapse-item {
+      font-size: 12px;
+      .ant-collapse-header {
+        color: rgba(0,0,0,.6);
+      }
     }
   }
 }

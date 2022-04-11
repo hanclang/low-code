@@ -1,42 +1,27 @@
+import Col from "./Col";
+import Row from "./Row";
+
 export default {
-  type: "Row",
+  ...Row,
   title: "2列栅格",
-  can_place: true,
   childrens: [
     {
-      type: "Col",
-      title: "栅格单元",
-      can_place: true,
+      ...Col,
       props: {
         span: 4,
         style: {
           minHeight: 30,
         },
       },
-      config: {
-        span: {
-          text: "栅格",
-          enum: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24],
-        },
-      },
     },
     {
-      type: "Col",
-      title: "栅格单元",
-      can_place: true,
+      ...Col,
       props: {
         span: 20,
         style: {
           minHeight: 30,
         },
       },
-      config: {
-        span: {
-          text: "栅格",
-          enum: [2, 4, 6, 8, 10, 12, 14, 16, 18, 20, 22, 24],
-        },
-      },
     },
   ],
-  props: {},
 };

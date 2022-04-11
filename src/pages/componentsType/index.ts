@@ -12,6 +12,10 @@ import Switch from "./Switch";
 import Space from "./Space";
 import Row from "./Row";
 import Col from "./Col";
+import Form from "./Form";
+import Form_Item from "./Form.Item";
+import Input from "./Input";
+import Input_TextArea from "./Input.TextArea";
 
 export default [
   {
@@ -54,6 +58,6 @@ export default [
   },
   {
     group_title: "数据录入",
-    components: [Switch],
+    components: [Switch, Form, Form_Item, Input, Input_TextArea],
   },
 ];

@@ -33,7 +33,7 @@ const RightSider: React.FC = () => {
         className: styles.trigger,
         onClick: toggle,
       })}
-      <div style={{ display: collapsed ? "block" : "none" }}>
+      <div style={{ display: collapsed ? "block" : "none", overflow: "auto", paddingBottom: 10 }}>
         {selectComponents.type ? (
           <div>
             属性编辑区（{selectComponents.title}）
@@ -175,6 +175,8 @@ const RightSider: React.FC = () => {
                                 </Select>
                               );
                             } else {
+                              const isJson = typeof selectComponents.props[key] === "object"
+                                && selectComponents.props[key]?.type === "json";
                               return (
                                 <Input
                                   onChange={(e) => {
@@ -184,11 +186,15 @@ const RightSider: React.FC = () => {
                                         id: selectComponents.id,
                                         value: inputValue,
                                         key,
+                                        subKey: isJson ? "value" : "",
                                         type: value.valueType || ""
                                       })
                                     );
                                   }}
-                                  value={selectComponents.props[key]}
+                                  value={isJson
+                                    ? selectComponents.props[key].value
+                                    : selectComponents.props[key]
+                                  }
                                 />
                               );
                             }

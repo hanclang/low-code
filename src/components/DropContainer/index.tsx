@@ -145,6 +145,12 @@ const DropContainer: React.FC<any> = () => {
           realProps[key] = realProps[realProps[key].target]
             ? realProps[key].true
             : realProps[key].false;
+        } else if (realProps[key]?.type === "json") { // 输入是json字符串
+          try {
+            realProps[key] = JSON.parse(realProps[key].value);
+          } catch (error) {
+            realProps[key] = {};
+          }
         }
       }
 

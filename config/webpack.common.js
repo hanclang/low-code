@@ -2,6 +2,7 @@ const MiniCssExtractPlugin = require("mini-css-extract-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const ESLintPlugin = require("eslint-webpack-plugin");
 const CopyPlugin = require("copy-webpack-plugin");
+const AntdDayjsWebpackPlugin = require("antd-dayjs-webpack-plugin"); // 替换moment
 
 const WebpackBar = require("webpackbar");
 const path = require("path");
@@ -115,6 +116,7 @@ module.exports = {
   },
   plugins: [
     new ESLintPlugin(),
+    new AntdDayjsWebpackPlugin(),
     new HtmlWebpackPlugin({
       template: path.resolve(PROJECT_PATH, "./public/index.html"),
     }),

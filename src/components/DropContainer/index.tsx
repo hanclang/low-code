@@ -69,7 +69,7 @@ const DropContainer: React.FC<any> = () => {
 
   let mouseDownResizeObserver = useMemo(
     () =>
-      new ResizeObserver((entries) => {
+      new MutationObserver((entries) => {
         let entry = entries[0];
         const { width, height, top, left } = getBoundingClientRect(
           entry as any
@@ -86,21 +86,21 @@ const DropContainer: React.FC<any> = () => {
   );
 
   // hook ResizeObserver
-  useEffect(() => {
-    window.addEventListener("transitionend", () => {
-      if (mouseDownRef.current) {
-        const { width, height, top, left } = getBoundingClientRect({
-          target: mouseDownRef.current,
-        } as any);
-        setMouseDownLayout({
-          width,
-          height,
-          top,
-          left,
-        });
-      }
-    });
-  }, []);
+  // useEffect(() => {
+  //   window.addEventListener("transitionend", () => {
+  //     if (mouseDownRef.current) {
+  //       const { width, height, top, left } = getBoundingClientRect({
+  //         target: mouseDownRef.current,
+  //       } as any);
+  //       setMouseDownLayout({
+  //         width,
+  //         height,
+  //         top,
+  //         left,
+  //       });
+  //     }
+  //   });
+  // }, []);
 
   const getBoundingClientRect = (
     e: React.MouseEvent<HTMLDivElement, MouseEvent>
@@ -153,7 +153,9 @@ const DropContainer: React.FC<any> = () => {
           }
         }
       }
-
+      realProps.onClick = (e: React.MouseEvent) => {
+        e.preventDefault();
+      };
       realProps.onMouseDown = (e: React.MouseEvent) => {
         e.stopPropagation();
         dispatch(setSelectComponents(d));

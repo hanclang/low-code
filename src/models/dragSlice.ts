@@ -61,7 +61,7 @@ export const dragSlice = createSlice({
     // action: {id, value, key, type}
     updateDragData: (state, action: PayloadAction<any>) => {
       // type 转换输入类型
-      const { id, key, value, subKey, type } = action.payload;
+      const { id, key, value, subKey, type, updateCom } = action.payload;
       const com = findUpdateCom(state.data, id);
       let v;
       if (type === "number") {
@@ -69,7 +69,9 @@ export const dragSlice = createSlice({
       } else {
         v = value;
       }
-      if (subKey) {
+      if (updateCom) { // 更新组件类型
+        com[key] = v;
+      } else if (subKey) { // 更新组件属性
         const style = com.props[key] || {};
         com.props[key] = { ...style, [subKey]: v};
       } else {

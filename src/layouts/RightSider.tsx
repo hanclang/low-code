@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Layout, Button, Alert, Form, Select, Input } from "antd";
-import { MenuUnfoldOutlined, MenuFoldOutlined } from "@ant-design/icons";
+import * as antdIcons from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 
 import styles from "./index.less";
@@ -29,7 +29,7 @@ const RightSider: React.FC = () => {
       className={styles.siderBackground}
       width={300}
     >
-      {React.createElement(collapsed ? MenuUnfoldOutlined : MenuFoldOutlined, {
+      {React.createElement(collapsed ? antdIcons.MenuUnfoldOutlined : antdIcons.MenuFoldOutlined, {
         className: styles.trigger,
         onClick: toggle,
       })}
@@ -55,15 +55,15 @@ const RightSider: React.FC = () => {
                       // TODO:
                       const style = selectComponents.config.style;
                       return Object.keys(style).map((styleKey, index) => {
+                        let defaultValue: string =
+                            selectComponents.props?.style?.[styleKey];
                         if (style[styleKey].type === "4-value") {
                           let styleValue: any[];
-                          let defaultValue: string =
-                            selectComponents.props?.style?.[styleKey] || "0";
-                          if (defaultValue.includes(" ")) {
+                          if (defaultValue?.includes(" ")) {
                             styleValue = defaultValue.split(" ");
                           } else {
                             styleValue = Array.from({ length: 4 }).fill(
-                              defaultValue
+                              defaultValue || "0"
                             );
                           }
                           // TODO: 抽取组件
@@ -136,8 +136,24 @@ const RightSider: React.FC = () => {
                               />
                             </Form.Item>
                           );
+                        } else {
+                          return <Form.Item key={index} label={value[styleKey].text}>
+                            <Input
+                              placeholder="请输入"
+                              value={defaultValue}
+                              onChange={(v) => {
+                                dispatch(
+                                  updateDragData({
+                                    id: selectComponents.id,
+                                    value: v.target.value,
+                                    key: "style",
+                                    subKey: styleKey,
+                                  })
+                                );
+                              }}
+                            />
+                          </Form.Item>;
                         }
-                        return null;
                       });
                     } else if (value.enumobject) {
                       // TODO:
@@ -149,7 +165,12 @@ const RightSider: React.FC = () => {
                             if (value.enum) {
                               return (
                                 <Select
-                                  style={{ width: 120 }}
+                                  optionLabelProp={value.type === "Icon" ? "value" : "children"}
+                                  placeholder="请选择"
+                                  showSearch
+                                  filterOption={(input, option) =>
+                                    String(option?.value).toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                  }
                                   value={selectComponents.props[key]}
                                   onChange={(v) => {
                                     const selectValue =
@@ -163,15 +184,30 @@ const RightSider: React.FC = () => {
                                         id: selectComponents.id,
                                         value: selectValue,
                                         key,
+                                        updateCom: value.updateCom,
                                       })
                                     );
                                   }}
                                 >
-                                  {value.enum.map((item: string) => (
-                                    <Select.Option key={item} value={item}>
-                                      {String(item)}
-                                    </Select.Option>
-                                  ))}
+                                  {value.enum.map((item: string) => {
+                                    if (value.type === "Icon") {
+                                      return (
+                                        <Select.Option key={item} value={item}>
+                                          <div style={{display: "flex", justifyContent: "space-between"}}>
+                                            {String(item)}
+                                            <span>
+                                              {React.createElement((antdIcons as any)[item])}
+                                            </span>
+                                          </div>
+                                        </Select.Option>
+                                      );
+                                    }
+                                    return (
+                                      <Select.Option key={item} value={item}>
+                                        {String(item)}
+                                      </Select.Option>
+                                    );
+                                  })}
                                 </Select>
                               );
                             } else {

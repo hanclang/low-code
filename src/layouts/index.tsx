@@ -30,7 +30,7 @@ const BaseLayouts: React.FC<any> = () => {
                   return (
                     <DragTag
                       draggingData={component}
-                      tagName={`${component.type} ${component.title}`}
+                      tagName={`${component.alias || component.type} ${component.title}`}
                       key={String(i) + i2}
                     />
                   );

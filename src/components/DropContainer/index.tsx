@@ -16,7 +16,7 @@ import antd from "src/pages/antdComponents";
 import DropComponent from "../DropComponent";
 import { cloneDeep } from "lodash-es";
 
-const observerConfig = { attributes: true, childList: true, subtree: true };
+const observerConfig = { attributes: true, };
 
 const DropContainer: React.FC<any> = () => {
   const dragData = useSelector((state: RootState) => state.drag.data);
@@ -68,6 +68,24 @@ const DropContainer: React.FC<any> = () => {
   );
 
   let mouseDownResizeObserver = useMemo(
+    () =>
+      new ResizeObserver((entries) => {
+        let entry = entries[0];
+        const { width, height, top, left } = getBoundingClientRect(
+          entry as any
+        );
+
+        setMouseDownLayout({
+          width,
+          height,
+          top,
+          left,
+        });
+      }),
+    []
+  );
+
+  let mouseDownMutationObserver = useMemo(
     () =>
       new MutationObserver((entries) => {
         let entry = entries[0];
@@ -153,48 +171,61 @@ const DropContainer: React.FC<any> = () => {
           }
         }
       }
+
       realProps.onClick = (e: React.MouseEvent) => {
         e.preventDefault();
-      };
-      realProps.onMouseDown = (e: React.MouseEvent) => {
         e.stopPropagation();
-        dispatch(setSelectComponents(d));
-        // @ts-ignore
-        mouseDownRef.current = e.currentTarget;
-        mouseDownResizeObserver.disconnect();
-        // @ts-ignore
-        mouseDownResizeObserver.observe(e.currentTarget, observerConfig);
-        const { width, height, top, left } = getBoundingClientRect({
-          target: e.currentTarget,
-        } as any);
-        setMouseDownLayout({
-          width,
-          height,
-          top,
-          left,
-        });
-        setIsMouseDown(true);
       };
+      if (!d.noBindEvent) { // 决定要不要邦事件
+        realProps.onMouseDown = (e: React.MouseEvent) => {
+          e.stopPropagation();
+          dispatch(setSelectComponents(d));
+          // @ts-ignore
+          mouseDownRef.current = e.currentTarget;
+          mouseDownResizeObserver.disconnect();
+          mouseDownMutationObserver.disconnect();
+          // @ts-ignore
+          mouseDownResizeObserver.observe(e.currentTarget, observerConfig);
+          mouseDownMutationObserver.observe(e.currentTarget, observerConfig);
+          const { width, height, top, left } = getBoundingClientRect({
+            target: e.currentTarget,
+          } as any);
+          setMouseDownLayout({
+            width,
+            height,
+            top,
+            left,
+          });
+          setIsMouseDown(true);
+        };
+        // 不冒泡
+        realProps.onMouseOver = (e: any) => {
+          e.stopPropagation();
+          dispatch(setMouseMoveCom(d));
 
-      // 不冒泡
-      realProps.onMouseOver = (e: any) => {
-        e.stopPropagation();
-        dispatch(setMouseMoveCom(d));
-
-        movingResizeObserver.disconnect();
-        // @ts-ignore
-        movingResizeObserver.observe(e.currentTarget);
-        const { width, height, top, left } = getBoundingClientRect({
-          target: e.currentTarget,
-        } as any);
-        setMovingLayout({
-          width,
-          height,
-          top,
-          left,
-        });
-        setIsMoving(true);
-      };
+          movingResizeObserver.disconnect();
+          // @ts-ignore
+          movingResizeObserver.observe(e.currentTarget);
+          const { width, height, top, left } = getBoundingClientRect({
+            target: e.currentTarget,
+          } as any);
+          setMovingLayout({
+            width,
+            height,
+            top,
+            left,
+          });
+          setIsMoving(true);
+        };
+      } else {
+        realProps.onMouseDown = (e: React.MouseEvent) => {
+          e.stopPropagation();
+        };
+        realProps.onMouseOver = (e: React.MouseEvent) => {
+          e.stopPropagation();
+          movingResizeObserver.disconnect();
+        };
+      }
 
       if (d.can_place) {
         realProps.className = realProps.className
@@ -243,10 +274,13 @@ const DropContainer: React.FC<any> = () => {
       onMouseDown={(e) => {
         // @ts-ignore
         mouseDownRef.current = null;
-        dispatch(setSelectComponents({id: "1245345"}));
+        dispatch(setSelectComponents({id: "1245345"})); // 默认给一个id
         mouseDownResizeObserver.disconnect();
+        mouseDownMutationObserver.disconnect();
         // @ts-ignore
         mouseDownResizeObserver.observe(e.target, observerConfig);
+        // @ts-ignore
+        mouseDownMutationObserver.observe(e.target, observerConfig);
         const { width, height, top, left } = getBoundingClientRect(e);
         setMouseDownLayout({
           width,

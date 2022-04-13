@@ -7,9 +7,9 @@ import { useDispatch, useSelector } from "react-redux";
 import logoPng from "src/assets/logo.png";
 import { resetDragData } from "src/models/dragSlice";
 import { RootState } from "src/models/store";
+import { GithubOutlined } from "@ant-design/icons";
 
 const { Header } = Layout;
-let indent_space = "";
 const LayoutHeader: React.FC = () => {
   const dispatch = useDispatch();
   const dragData = useSelector((state: RootState) => state.drag.data);
@@ -20,13 +20,11 @@ const LayoutHeader: React.FC = () => {
   };
 
   const renderJSONtoJSX = () => {
-    indent_space = "";
-
     return `import React from 'react';
 
 const Index = () => {
   return <>
-    ${renderElementtoJSX(dragData).replace(/\n {4}/, "")}
+    ${renderElementtoJSX(dragData)}
   </>
 }
 export default Index;
@@ -34,21 +32,22 @@ export default Index;
 `;
   };
 
-  const renderElementtoJSX = (data: any[]) => {
+  const renderElementtoJSX = (data: any[], indent_space = "") => {
     let result = "";
-    indent_space += "  ";
+    // indent_space += "  ";
     data.forEach((d) => {
       if (d.hasDelete) return;
-      result += `
-    ${indent_space}<${d.type}>${
+      result += `${indent_space}<${d.type}>${
         d.props.content
           ? [d.props.content]
           : d.childrens
-          ? renderElementtoJSX(d.childrens)
+          // eslint-disable-next-line no-useless-concat
+          ? "\n    " + renderElementtoJSX(d.childrens, indent_space + "  ")
           : ""
       }</${d.type}>
     `;
     });
+    // eslint-disable-next-line no-param-reassign
     indent_space = indent_space.replace("  ", "");
 
     result += `${indent_space}`;
@@ -62,6 +61,7 @@ export default Index;
         <Space>
           <Button onClick={reset}>重置页面</Button>
           <Button onClick={() => setVisible(true)} type="primary">出码</Button>
+          <a target="_blank" href="https://github.com/hanclang/low-code" style={{color: "#333"}}><GithubOutlined style={{fontSize: 24}} /></a>
         </Space>
       </Header>
       <Modal width={750} onCancel={() => setVisible(false)} title="代码预览" visible={visible} forceRender>

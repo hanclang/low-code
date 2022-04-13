@@ -1,15 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { uniqueId } from "lodash-es";
+import { ComponentProps } from "src/pages/componentsType";
 
 interface InitialState {
   data: any[];
-  selectComponents: any;
+  selectComponents: ComponentProps;
   mouseMoveCom: any;
 }
 
 const initialState: InitialState = {
   data: [],
-  selectComponents: {},
+  selectComponents: {} as any,
   mouseMoveCom: {},
 };
 
@@ -69,7 +70,7 @@ export const dragSlice = createSlice({
       } else {
         v = value;
       }
-      if (updateCom) { // 更新组件类型
+      if (updateCom) { // 更新组件类型，比如Icon
         com[key] = v;
       } else if (subKey) { // 更新组件属性
         const style = com.props[key] || {};
@@ -88,6 +89,20 @@ export const dragSlice = createSlice({
         com.childrens = [dragData];
       }
       setId(com.childrens);
+      state.selectComponents = com;
+    },
+    // 更新子节点，比如select组件
+    updateDragChildren: (state, action: PayloadAction<any>) => {
+      const { id, index, row } = action.payload;
+      const com = findUpdateCom(state.data, id);
+      const item = com.childrens[index];
+      if (row) {
+        com.childrens.splice(index, 1, { ...item, props: row });
+      } else {
+        com.childrens.splice(index, 1);
+      }
+
+      state.selectComponents = com;
     },
     setSelectComponents: (state, action: PayloadAction<any>) => {
       state.selectComponents = action.payload;
@@ -104,6 +119,7 @@ export const {
   resetDragData,
   deleteDragComponent,
   updateDragData,
+  updateDragChildren,
   setSelectComponents,
   setMouseMoveCom,
   updateChildren,

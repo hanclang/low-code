@@ -7,6 +7,7 @@ import styles from "./index.less";
 import { RootState } from "src/models/store";
 import { keys, mapKeys } from "lodash-es";
 import { deleteDragComponent, setSelectComponents, updateDragData } from "src/models/dragSlice";
+import EditableTable from "src/components/EditTable";
 
 const { Sider } = Layout;
 
@@ -33,7 +34,7 @@ const RightSider: React.FC = () => {
         className: styles.trigger,
         onClick: toggle,
       })}
-      <div style={{ display: collapsed ? "block" : "none", overflow: "auto", paddingBottom: 10 }}>
+      <div key={selectComponents.id} style={{ display: collapsed ? "block" : "none", overflow: "auto", paddingBottom: 10 }}>
         {selectComponents.type ? (
           <div>
             属性编辑区（{selectComponents.title}）
@@ -50,10 +51,10 @@ const RightSider: React.FC = () => {
               {selectComponents?.config ? (
                 <Form layout="vertical">
                   {keys(selectComponents.config).map((key) => {
-                    const value = selectComponents.config[key];
+                    const value = selectComponents.config![key];
                     if (key === "style") {
                       // TODO:
-                      const style = selectComponents.config.style;
+                      const style = selectComponents.config?.style || {};
                       return Object.keys(style).map((styleKey, index) => {
                         let defaultValue: string =
                             selectComponents.props?.style?.[styleKey];
@@ -157,7 +158,11 @@ const RightSider: React.FC = () => {
                       });
                     } else if (value.enumobject) {
                       // TODO:
-                      return null;
+                      const columns = [...value.enumobject];
+                      const dataSource = selectComponents.childrens?.map((item, index) => {
+                        return {...item.props, index};
+                      });
+                      return <EditableTable childrenType={selectComponents.childrenType} id={selectComponents.id} key={key} data={dataSource} columns={columns} />;
                     } else {
                       return (
                         <Form.Item label={value.text} key={key}>

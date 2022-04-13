@@ -22,12 +22,15 @@ import Typography_Text from "./Typography.Text";
 import Typography_Link from "./Typography.Link";
 import Select from "./Select";
 
-interface ComponentProps {
+export interface ComponentProps {
+  id?: string;
   type: string;
+  childrenType?: string;
   title: string;
   alias?: string;
   is_native?: boolean;
   can_place?: boolean;
+  childrens?: Partial<ComponentProps>[];
   props: {
     [propName: string]: any;
   };

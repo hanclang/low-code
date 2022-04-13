@@ -1,12 +1,13 @@
 export default {
   type: "Select",
+  childrenType: "Select.Option",
   title: "选择器",
   childrens: [
     {
       type: "Select.Option",
       noBindEvent: true,
       props: {
-        key: "1",
+        key: "0",
         value: "第一个",
       }
     },
@@ -14,7 +15,7 @@ export default {
       type: "Select.Option",
       noBindEvent: true,
       props: {
-        key: "2",
+        key: "1",
         value: "第二个",
       }
     },
@@ -41,13 +42,13 @@ export default {
       text: "数据源",
       enumobject: [
         {
-          title: "文本",
-          dataIndex: "value",
+          title: "key",
+          dataIndex: "key",
           type: "String",
         },
         {
-          title: "真实值",
-          dataIndex: "key",
+          title: "value",
+          dataIndex: "value",
           type: "String",
         },
       ],

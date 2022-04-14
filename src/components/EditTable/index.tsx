@@ -55,6 +55,7 @@ const EditableTable = ({data = [], columns = [], id = "", childrenType}: any) =>
       id,
       dragData: {
         type: childrenType,
+        noBindEvent: true,
         props
       }
     }));

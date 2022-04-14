@@ -1,3 +1,9 @@
+@fontSize: 12px;
+@color: rgba(0,0,0,.6);
+.sizeAndColor {
+  font-size: @fontSize;
+  color: @color;
+}
 .layout {
   height: 100vh;
   :global {
@@ -29,9 +35,9 @@
       padding: 10px !important;
     }
     .ant-collapse > .ant-collapse-item {
-      font-size: 12px;
+      font-size: @fontSize;
       .ant-collapse-header {
-        color: rgba(0,0,0,.6);
+        color: @color;
       }
     }
   }
@@ -41,13 +47,14 @@
 .siderBackground {
   background: #fff !important;
   padding: 8px;
-  font-size: 12px;
-  color: rgba(0,0,0,.6);
+  .sizeAndColor();
   overflow: auto;
+  span {
+    .sizeAndColor();
+  }
   :global {
     .ant-btn,.ant-form-item-label > label {
-      font-size: 12px;
-      color: rgba(0,0,0,.6);
+      .sizeAndColor();
     }
     .ant-btn {
       height: 28px;

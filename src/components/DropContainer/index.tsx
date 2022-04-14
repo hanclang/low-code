@@ -163,7 +163,7 @@ const DropContainer: React.FC<any> = () => {
           realProps[key] = realProps[realProps[key].target]
             ? realProps[key].true
             : realProps[key].false;
-        } else if (realProps[key]?.type === "json") { // 输入是json字符串
+        } else if (realProps[key]?.type === "json") { // 输入是json字符串 比如Form表单
           try {
             realProps[key] = JSON.parse(realProps[key].value);
           } catch (error) {
@@ -243,9 +243,9 @@ const DropContainer: React.FC<any> = () => {
           : null
       );
 
-      if (d.can_place) {
+      if (!d.noBindEvent) {
         return (
-          <DropComponent id={d.id} key={d.id}>
+          <DropComponent data={d} parentId={d.parentId} index={i} id={d.id} key={d.id}>
             {jsxElement}
           </DropComponent>
         );

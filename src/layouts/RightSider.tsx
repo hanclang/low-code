@@ -162,7 +162,10 @@ const RightSider: React.FC = () => {
                       const dataSource = selectComponents.childrens?.map((item, index) => {
                         return {...item.props, index};
                       });
-                      return <EditableTable childrenType={selectComponents.childrenType} id={selectComponents.id} key={key} data={dataSource} columns={columns} />;
+                      return <>
+                        <span>{value.text}</span>
+                        <EditableTable childrenType={selectComponents.childrenType} id={selectComponents.id} key={key} data={dataSource} columns={columns} />
+                      </>;
                     } else {
                       return (
                         <Form.Item label={value.text} key={key}>

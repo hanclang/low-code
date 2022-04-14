@@ -18,13 +18,17 @@ const initialState: InitialState = {
  * 为每个组件标识唯一id
  * @param data
  */
-const setId = (data: any[]) => {
-  data.forEach((item) => {
-    if (!item.id) item.id = uniqueId("com");
-    if (item.childrens && Array.isArray(item.childrens)) {
-      setId(item.childrens);
-    }
-  });
+const setId = (data: any) => {
+  if (Array.isArray(data)) {
+    data.forEach((item) => {
+      if (!item.id) item.id = uniqueId("com");
+      if (item.childrens && Array.isArray(item.childrens)) {
+        setId(item.childrens);
+      }
+    });
+  } else {
+    if (!data.id) data.id = uniqueId("com");
+  }
 };
 
 const findUpdateCom = (data: any[], id: string): any => {
@@ -50,6 +54,20 @@ export const dragSlice = createSlice({
       // TODO: 复杂数据存储
       state.data.push(action.payload);
       setId(state.data);
+    },
+    appendCom: (state, action: PayloadAction<any>) => {
+      let {
+            hoverParentId,
+            hoverIndex,
+            data,
+            item,
+            positionDown,
+          } = action.payload;
+      if (positionDown) {
+        hoverIndex += 1;
+      }
+      setId(item);
+      state.data.splice(hoverIndex, 0, item);
     },
     resetDragData: (state) => {
       state.data = [];
@@ -123,6 +141,7 @@ export const {
   setSelectComponents,
   setMouseMoveCom,
   updateChildren,
+  appendCom,
 } = dragSlice.actions;
 
 export default dragSlice.reducer;

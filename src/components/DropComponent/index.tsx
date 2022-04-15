@@ -3,7 +3,10 @@ import React, { useRef, useState } from "react";
 import { useDrop } from "react-dnd";
 import ReactDOM from "react-dom";
 import { useDispatch } from "react-redux";
+import classNames from "classnames";
 import { appendCom, updateChildren } from "src/models/dragSlice";
+
+import styles from './index.less'
 
 interface DropComponentProps {
   id: string;
@@ -25,7 +28,6 @@ const DropComponent: React.FC<DropComponentProps> = ({ children, id, index, pare
         return;
       }
       if (!item.draggingData.id) {
-        console.log(index, positionDown);
         dispatch(
           appendCom({
             hoverParentId: parentId,
@@ -70,21 +72,20 @@ const DropComponent: React.FC<DropComponentProps> = ({ children, id, index, pare
     }),
   }), [positionDown, id]);
   // @ts-ignore
-  const style = children?.props?.style || {};
+  const cName: string = children?.props?.className || "";
   drop(ref);
 
   return <Wrapper dropRef={ref}>
-  {isOverCurrent && canDrop && !positionDown ? (
-    <div style={{border: "3px solid red", display: "inline-block"}} />
-  ) : null}
   {// @ts-ignore
     React.cloneElement(children, {
-      style: { ...style, border: isOverCurrent ? "1px dashed red" : "" },
+      className: classNames(cName, {
+        [styles.border]: isOverCurrent && data.can_place,
+        [styles.line]: !data.can_place,
+        [styles.lineTop]: isOverCurrent && canDrop && !positionDown,
+        [styles.lineBottom]: isOverCurrent && canDrop && positionDown
+      }, )
     })
   }
-  {isOverCurrent && canDrop && positionDown ? (
-    <div style={{border: "3px solid red", display: "inline-block"}} />
-  ) : null}
   </Wrapper>
   ;
 };

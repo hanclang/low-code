@@ -63,11 +63,28 @@ export const dragSlice = createSlice({
             item,
             positionDown,
           } = action.payload;
-      if (positionDown) {
-        hoverIndex += 1;
-      }
-      setId(item);
-      state.data.splice(hoverIndex, 0, item);
+          setId(item);
+          if (positionDown) {
+            hoverIndex += 1;
+          }
+          console.log(hoverIndex, hoverParentId);
+          if (data.id && data.can_place) {
+            const com = findUpdateCom(state.data, data.id);
+            item.parentId = data.id;
+            if (com.childrens) {
+              com.childrens.push(item);
+              // com.childrens.splice(hoverIndex, 0, item);
+            } else {
+              com.childrens = [item];
+            }
+          } else if(hoverParentId) {
+            const com = findUpdateCom(state.data, hoverParentId);
+            item.parentId = hoverParentId;
+            com.childrens.splice(hoverIndex, 0, item);
+          } else {
+            state.data.splice(hoverIndex, 0, item);
+          }
+
     },
     resetDragData: (state) => {
       state.data = [];

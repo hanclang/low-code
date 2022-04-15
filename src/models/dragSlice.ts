@@ -67,7 +67,6 @@ export const dragSlice = createSlice({
           if (positionDown) {
             hoverIndex += 1;
           }
-          console.log(hoverIndex, hoverParentId);
           if (data.id && data.can_place) {
             const com = findUpdateCom(state.data, data.id);
             item.parentId = data.id;
@@ -85,6 +84,19 @@ export const dragSlice = createSlice({
             state.data.splice(hoverIndex, 0, item);
           }
 
+    },
+    moveCom: (state, action: PayloadAction<any>) => {
+      const {dragParentId, dragIndex, item, hoverIndex} = action.payload;
+      if (!hoverIndex) {
+        if (dragParentId) {
+          const com = findUpdateCom(state.data, dragParentId);
+          com.childrens.splice(dragIndex, 1);
+        } else {
+          state.data.splice(dragIndex, 1);
+        }
+        item.parentId = undefined;
+        state.data.push(item);
+      }
     },
     resetDragData: (state) => {
       state.data = [];
@@ -159,6 +171,7 @@ export const {
   setMouseMoveCom,
   updateChildren,
   appendCom,
+  moveCom,
 } = dragSlice.actions;
 
 export default dragSlice.reducer;

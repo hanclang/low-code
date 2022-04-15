@@ -1,6 +1,6 @@
 import { cloneDeep } from "lodash-es";
 import React, { useRef, useState } from "react";
-import { useDrop } from "react-dnd";
+import { useDrag, useDrop } from "react-dnd";
 import ReactDOM from "react-dom";
 import { useDispatch } from "react-redux";
 import classNames from "classnames";
@@ -71,9 +71,24 @@ const DropComponent: React.FC<DropComponentProps> = ({ children, id, index, pare
       isOverCurrent: monitor.isOver({ shallow: true }),
     }),
   }), [positionDown, id]);
+
+  const [{isDragging}, drap] = useDrag(() => {
+    const draggingData = {
+      ...data,
+      index,
+      parentId,
+    };
+    return {
+      type: "tag",
+      item: { draggingData },
+      collect: (monitor) => ({
+        isDragging: monitor.isDragging(),
+      }),
+    };
+  }, [data, index, parentId]);
   // @ts-ignore
   const cName: string = children?.props?.className || "";
-  drop(ref);
+  drap(drop(ref));
 
   return <Wrapper dropRef={ref}>
   {// @ts-ignore

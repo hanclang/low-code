@@ -7,6 +7,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { RootState } from "src/models/store";
 
 import {
+  moveCom,
   setDragData,
   setMouseMoveCom,
   setSelectComponents,
@@ -35,7 +36,19 @@ const DropContainer: React.FC<any> = () => {
       if (didDrop) {
         return;
       }
-      dispatch(setDragData(cloneDeep(item.draggingData)));
+      if (!item.draggingData.id) {
+        dispatch(setDragData(cloneDeep(item.draggingData)));
+      } else {
+        dispatch(
+          moveCom({
+            dragParentId: item.draggingData.parentId,
+            dragIndex: item.draggingData.index,
+            // data,
+            item: item.draggingData,
+          })
+        );
+      }
+
     },
     collect: (monitor) => ({
       isOver: monitor.isOver(),

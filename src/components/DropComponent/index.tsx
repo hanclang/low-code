@@ -4,7 +4,7 @@ import { useDrag, useDrop } from "react-dnd";
 import ReactDOM from "react-dom";
 import { useDispatch } from "react-redux";
 import classNames from "classnames";
-import { appendCom, updateChildren } from "src/models/dragSlice";
+import { appendCom, moveCom, updateChildren } from "src/models/dragSlice";
 
 import styles from './index.less'
 
@@ -34,6 +34,18 @@ const DropComponent: React.FC<DropComponentProps> = ({ children, id, index, pare
             hoverIndex: index,
             data,
             item: cloneDeep(item.draggingData),
+            positionDown,
+          })
+        );
+      } else {
+        dispatch(
+          moveCom({
+            hoverParentId: parentId,
+            hoverIndex: index,
+            dragParentId: item.draggingData.parentId,
+            dragIndex: item.draggingData.index,
+            data,
+            item: item.draggingData,
             positionDown,
           })
         );
@@ -70,7 +82,7 @@ const DropComponent: React.FC<DropComponentProps> = ({ children, id, index, pare
       canDrop: monitor.canDrop(),
       isOverCurrent: monitor.isOver({ shallow: true }),
     }),
-  }), [positionDown, id]);
+  }), [data, positionDown, id]);
 
   const [{isDragging}, drap] = useDrag(() => {
     const draggingData = {

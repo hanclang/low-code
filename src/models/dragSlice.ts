@@ -18,16 +18,21 @@ const initialState: InitialState = {
  * 为每个组件标识唯一id
  * @param data
  */
-const setId = (data: any) => {
+const setId = (data: any, pId?: string) => {
   if (Array.isArray(data)) {
     data.forEach((item) => {
       if (!item.id) item.id = uniqueId("com");
+      if (pId) item.parentId = pId;
       if (item.childrens && Array.isArray(item.childrens)) {
-        setId(item.childrens);
+        setId(item.childrens, item.id);
       }
     });
   } else {
     if (!data.id) data.id = uniqueId("com");
+    if (pId) data.parentId = pId;
+    if (data?.childrens && Array.isArray(data.childrens)) {
+      setId(data.childrens, data.id);
+    }
   }
 };
 
@@ -51,51 +56,85 @@ export const dragSlice = createSlice({
   initialState,
   reducers: {
     setDragData: (state, action: PayloadAction<any>) => {
-      // TODO: 复杂数据存储
       state.data.push(action.payload);
       setId(state.data);
     },
     appendCom: (state, action: PayloadAction<any>) => {
-      let {
-            hoverParentId,
-            hoverIndex,
-            data,
-            item,
-            positionDown,
-          } = action.payload;
-          setId(item);
-          if (positionDown) {
-            hoverIndex += 1;
-          }
-          if (data.id && data.can_place) {
-            const com = findUpdateCom(state.data, data.id);
-            item.parentId = data.id;
-            if (com.childrens) {
-              com.childrens.push(item);
-              // com.childrens.splice(hoverIndex, 0, item);
-            } else {
-              com.childrens = [item];
-            }
-          } else if(hoverParentId) {
-            const com = findUpdateCom(state.data, hoverParentId);
-            item.parentId = hoverParentId;
-            com.childrens.splice(hoverIndex, 0, item);
-          } else {
-            state.data.splice(hoverIndex, 0, item);
-          }
-
+      let { hoverParentId, hoverIndex, data, item, positionDown } =
+        action.payload;
+      setId(item);
+      if (positionDown) {
+        hoverIndex += 1;
+      }
+      if (data.id && data.can_place) {
+        const com = findUpdateCom(state.data, data.id);
+        item.parentId = data.id;
+        if (com.childrens) {
+          com.childrens.push(item);
+          // com.childrens.splice(hoverIndex, 0, item);
+        } else {
+          com.childrens = [item];
+        }
+      } else if (hoverParentId) {
+        const com = findUpdateCom(state.data, hoverParentId);
+        item.parentId = hoverParentId;
+        com.childrens.splice(hoverIndex, 0, item);
+      } else {
+        state.data.splice(hoverIndex, 0, item);
+      }
     },
     moveCom: (state, action: PayloadAction<any>) => {
-      const {dragParentId, dragIndex, item, hoverIndex} = action.payload;
-      if (!hoverIndex) {
-        if (dragParentId) {
-          const com = findUpdateCom(state.data, dragParentId);
-          com.childrens.splice(dragIndex, 1);
-        } else {
-          state.data.splice(dragIndex, 1);
-        }
+      let {
+        data,
+        dragParentId,
+        dragIndex,
+        item,
+        hoverIndex,
+        hoverParentId,
+        positionDown,
+      } = action.payload;
+      if (dragParentId) {
+        const com = findUpdateCom(state.data, dragParentId);
+        com.childrens.splice(dragIndex, 1);
+      } else {
+        state.data.splice(dragIndex, 1);
+      }
+      console.log({
+        data,
+        dragParentId,
+        dragIndex,
+        item,
+        hoverIndex,
+        hoverParentId,
+        positionDown,
+      });
+      if (typeof hoverIndex !== "number") {
+        // 最外层整个容器
         item.parentId = undefined;
         state.data.push(item);
+      } else {
+        // 每个组件
+        if (data.can_place && data.id) {
+          const com = findUpdateCom(state.data, data.id);
+          item.parentId = data.id;
+          if (com.childrens) {
+            com.childrens.push(item);
+          } else {
+            com.childrens = [item];
+          }
+          return;
+        }
+        if (positionDown) {
+          hoverIndex += 1;
+        }
+        if (hoverParentId) {
+          const com = findUpdateCom(state.data, hoverParentId);
+          item.parentId = hoverParentId;
+          com.childrens.splice(hoverIndex, 0, item);
+        } else {
+          item.parentId = undefined;
+          state.data.splice(hoverIndex, 0, item);
+        }
       }
     },
     resetDragData: (state) => {
@@ -117,11 +156,13 @@ export const dragSlice = createSlice({
       } else {
         v = value;
       }
-      if (updateCom) { // 更新组件类型，比如Icon
+      if (updateCom) {
+        // 更新组件类型，比如Icon
         com[key] = v;
-      } else if (subKey) { // 更新组件属性
+      } else if (subKey) {
+        // 更新组件属性
         const style = com.props[key] || {};
-        com.props[key] = { ...style, [subKey]: v};
+        com.props[key] = { ...style, [subKey]: v };
       } else {
         com.props[key] = v;
       }

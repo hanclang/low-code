@@ -21,6 +21,7 @@ import Typography_Title from "./Typography.Title";
 import Typography_Text from "./Typography.Text";
 import Typography_Link from "./Typography.Link";
 import Select from "./Select";
+import Calendar from "./Calendar";
 
 export interface ComponentProps {
   id?: string;
@@ -93,6 +94,10 @@ const components: ComponentsProps[] = [
     group_title: "数据录入",
     components: [Switch, Form, Form_Item, Input, Input_TextArea, Select],
   },
+  {
+    group_title: "数据展示",
+    components: [Calendar]
+  }
 ];
 
 export default components;

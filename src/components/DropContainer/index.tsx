@@ -239,14 +239,13 @@ const DropContainer: React.FC<any> = () => {
           movingResizeObserver.disconnect();
         };
       }
-
       if (d.can_place) {
         realProps.className = realProps.className
           ? styles.draggable + String(realProps.className)
           : styles.draggable;
       }
 
-      const jsxElement = React.createElement(
+      let jsxElement = React.createElement(
         component,
         realProps,
         d.props.content
@@ -255,6 +254,12 @@ const DropContainer: React.FC<any> = () => {
           ? renderDragComponents(d.childrens)
           : null
       );
+
+      if (d.type === "Calendar") {
+        jsxElement = <div onMouseOver={realProps.onMouseOver} onMouseDown={realProps.onMouseDown}>
+          {jsxElement}
+        </div>;
+      }
 
       if (!d.noBindEvent) {
         return (

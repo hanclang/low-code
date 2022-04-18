@@ -255,8 +255,8 @@ const DropContainer: React.FC<any> = () => {
           : null
       );
 
-      if (d.type === "Calendar") {
-        jsxElement = <div onMouseOver={realProps.onMouseOver} onMouseDown={realProps.onMouseDown}>
+      if (d.type === "Calendar" || d.type ===  "Pagination" || d.type === "DatePicker") {
+        jsxElement = <div style={{display: "inline-block", width: "fit-content"}} onMouseOver={realProps.onMouseOver} onMouseDown={realProps.onMouseDown}>
           {jsxElement}
         </div>;
       }

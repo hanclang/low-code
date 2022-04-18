@@ -159,11 +159,17 @@ const RightSider: React.FC = () => {
                     } else if (value.enumobject) {
                       // TODO:
                       const columns = [...value.enumobject];
-                      const dataSource = selectComponents.childrens?.map((item, index) => {
-                        return {...item.props, index};
-                      });
+                      let dataSource: any[] = [];
+                      if (selectComponents.childrens) {
+                        dataSource = selectComponents.childrens?.map((item, index) => {
+                          return {...item.props, index};
+                        });
+                      } else {
+                        dataSource = selectComponents.props[key];
+                      }
+
                       return <>
-                        <span>{value.text}</span>
+                        <span style={{marginBottom: 8, display: "block"}}>{value.text}</span>
                         <EditableTable childrenType={selectComponents.childrenType} id={selectComponents.id} key={key} data={dataSource} columns={columns} />
                       </>;
                     } else {

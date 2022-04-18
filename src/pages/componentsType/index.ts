@@ -22,6 +22,10 @@ import Typography_Text from "./Typography.Text";
 import Typography_Link from "./Typography.Link";
 import Select from "./Select";
 import Calendar from "./Calendar";
+import Pagination from "./Pagination";
+import Tag from "./Tag";
+import DatePicker from "./DatePicker";
+import Breadcrumb from "./Breadcrumb";
 
 export interface ComponentProps {
   id?: string;
@@ -87,17 +91,35 @@ const components: ComponentsProps[] = [
     ],
   },
   {
+    group_title: "导航",
+    components: [Breadcrumb, Pagination],
+  },
+  {
     group_title: "通用",
-    components: [Button, Icon, Typography_Title, Typography_Text, Typography_Link],
+    components: [
+      Button,
+      Icon,
+      Typography_Title,
+      Typography_Text,
+      Typography_Link,
+    ],
   },
   {
     group_title: "数据录入",
-    components: [Switch, Form, Form_Item, Input, Input_TextArea, Select],
+    components: [
+      Switch,
+      Form,
+      Form_Item,
+      Input,
+      Input_TextArea,
+      Select,
+      DatePicker,
+    ],
   },
   {
     group_title: "数据展示",
-    components: [Calendar]
-  }
+    components: [Calendar, Tag],
+  },
 ];
 
 export default components;

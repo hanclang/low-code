@@ -165,13 +165,15 @@ const RightSider: React.FC = () => {
                           return {...item.props, index};
                         });
                       } else {
-                        dataSource = selectComponents.props[key];
+                        dataSource = selectComponents.props[key].map((item: any, index: number) => {
+                          return {...item, index};
+                        });
                       }
 
-                      return <>
+                      return <React.Fragment key={key}>
                         <span style={{marginBottom: 8, display: "block"}}>{value.text}</span>
-                        <EditableTable childrenType={selectComponents.childrenType} id={selectComponents.id} key={key} data={dataSource} columns={columns} />
-                      </>;
+                        <EditableTable childrenType={selectComponents.childrenType} id={selectComponents.id} propsKey={key} data={dataSource} columns={columns} />
+                      </React.Fragment>;
                     } else {
                       return (
                         <Form.Item label={value.text} key={key}>

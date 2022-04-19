@@ -148,11 +148,19 @@ export const dragSlice = createSlice({
     // action: {id, value, key, type}
     updateDragData: (state, action: PayloadAction<any>) => {
       // type 转换输入类型
-      const { id, key, value, subKey, type, updateCom } = action.payload;
+      const { id, key, value, subKey, type, updateCom, index } = action.payload;
       const com = findUpdateCom(state.data, id);
       let v;
       if (type === "number") {
         v = Number(value);
+      } else if (type === "Array") {
+        let propsValue = state.selectComponents.props[key];
+        propsValue.push(value);
+        v = propsValue;
+      } else if (type === "updateArray") {
+        let propsValue = state.selectComponents.props[key];
+        propsValue.splice(index, 1, value);
+        v = propsValue;
       } else {
         v = value;
       }

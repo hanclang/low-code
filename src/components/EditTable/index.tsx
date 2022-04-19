@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Table, Input, InputNumber, Form, Typography, Button } from "antd";
 import { useDispatch } from "react-redux";
-import { updateChildren, updateDragChildren } from "src/models/dragSlice";
+import { updateChildren, updateDragChildren, updateDragData } from "src/models/dragSlice";
 
 const EditableCell = ({
   editing,
@@ -32,7 +32,7 @@ const EditableCell = ({
   );
 };
 
-const EditableTable = ({data = [], columns = [], id = "", childrenType}: any) => {
+const EditableTable = ({propsKey, data = [], columns = [], id = "", childrenType}: any) => {
   const [form] = Form.useForm();
   const [editingKey, setEditingKey] = useState("");
   const dispatch = useDispatch();
@@ -51,14 +51,24 @@ const EditableTable = ({data = [], columns = [], id = "", childrenType}: any) =>
     columns.forEach((item: any) => {
       props[item.dataIndex] = item.dataIndex;
     });
-    dispatch(updateChildren({
-      id,
-      dragData: {
-        type: childrenType,
-        noBindEvent: true,
-        props
-      }
-    }));
+    if (childrenType) { // 更新像select那样的组件
+      dispatch(updateChildren({
+        id,
+        dragData: {
+          type: childrenType,
+          noBindEvent: true,
+          props
+        }
+      }));
+    } else {
+      dispatch(updateDragData({
+        id,
+        value: props,
+        type: "Array",
+        key: propsKey
+      }));
+    }
+
   };
 
   const cancel = () => {
@@ -68,12 +78,22 @@ const EditableTable = ({data = [], columns = [], id = "", childrenType}: any) =>
   const save = async (key: number) => {
     try {
       const row = await form.validateFields();
-      dispatch(updateDragChildren({
-        id,
-        index: key,
-        row
-      }));
-      console.log(row);
+      if (childrenType) { // 更新像select那样的组件
+        dispatch(updateDragChildren({
+          id,
+          index: key,
+          row
+        }));
+      } else {
+        dispatch(updateDragData({
+          id,
+          value: row,
+          type: "updateArray",
+          key: propsKey,
+          index: key,
+        }));
+      }
+
       setEditingKey("");
     } catch (errInfo) {
       console.log("Validate Failed:", errInfo);

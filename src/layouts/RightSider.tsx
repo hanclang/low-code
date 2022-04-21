@@ -1,12 +1,25 @@
 import React, { useState } from "react";
-import { Layout, Button, Alert, Form, Select, Input, message } from "antd";
+import {
+  Layout,
+  Button,
+  Alert,
+  Form,
+  Select,
+  Input,
+  message,
+  Switch,
+} from "antd";
 import * as antdIcons from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 
 import styles from "./index.less";
 import { RootState } from "src/models/store";
 import { keys, mapKeys } from "lodash-es";
-import { deleteDragComponent, setSelectComponents, updateDragData } from "src/models/dragSlice";
+import {
+  deleteDragComponent,
+  setSelectComponents,
+  updateDragData,
+} from "src/models/dragSlice";
 import EditableTable from "src/components/EditTable";
 
 const { Sider } = Layout;
@@ -30,11 +43,21 @@ const RightSider: React.FC = () => {
       className={styles.siderBackground}
       width={300}
     >
-      {React.createElement(collapsed ? antdIcons.MenuUnfoldOutlined : antdIcons.MenuFoldOutlined, {
-        className: styles.trigger,
-        onClick: toggle,
-      })}
-      <div key={selectComponents.id} style={{ display: collapsed ? "block" : "none", overflow: "auto", paddingBottom: 10 }}>
+      {React.createElement(
+        collapsed ? antdIcons.MenuUnfoldOutlined : antdIcons.MenuFoldOutlined,
+        {
+          className: styles.trigger,
+          onClick: toggle,
+        }
+      )}
+      <div
+        key={selectComponents.id}
+        style={{
+          display: collapsed ? "block" : "none",
+          overflow: "auto",
+          paddingBottom: 10,
+        }}
+      >
         {selectComponents.type ? (
           <div>
             属性编辑区（{selectComponents.title}）
@@ -43,9 +66,9 @@ const RightSider: React.FC = () => {
                 onClick={() => {
                   if (selectComponents.noDelete) {
                     message.warn("此组件禁止删除");
-                    return ;
+                    return;
                   }
-                  dispatch(deleteDragComponent({id: selectComponents.id}));
+                  dispatch(deleteDragComponent({ id: selectComponents.id }));
                   dispatch(setSelectComponents({}));
                 }}
                 style={{ marginRight: 20, marginTop: 10 }}
@@ -61,7 +84,7 @@ const RightSider: React.FC = () => {
                       const style = selectComponents.config?.style || {};
                       return Object.keys(style).map((styleKey, index) => {
                         let defaultValue: string =
-                            selectComponents.props?.style?.[styleKey];
+                          selectComponents.props?.style?.[styleKey];
                         if (style[styleKey].type === "4-value") {
                           let styleValue: any[];
                           if (defaultValue?.includes(" ")) {
@@ -142,22 +165,24 @@ const RightSider: React.FC = () => {
                             </Form.Item>
                           );
                         } else {
-                          return <Form.Item key={index} label={value[styleKey].text}>
-                            <Input
-                              placeholder="请输入"
-                              value={defaultValue}
-                              onChange={(v) => {
-                                dispatch(
-                                  updateDragData({
-                                    id: selectComponents.id,
-                                    value: v.target.value,
-                                    key: "style",
-                                    subKey: styleKey,
-                                  })
-                                );
-                              }}
-                            />
-                          </Form.Item>;
+                          return (
+                            <Form.Item key={index} label={value[styleKey].text}>
+                              <Input
+                                placeholder="请输入"
+                                value={defaultValue}
+                                onChange={(v) => {
+                                  dispatch(
+                                    updateDragData({
+                                      id: selectComponents.id,
+                                      value: v.target.value,
+                                      key: "style",
+                                      subKey: styleKey,
+                                    })
+                                  );
+                                }}
+                              />
+                            </Form.Item>
+                          );
                         }
                       });
                     } else if (value.enumobject) {
@@ -165,19 +190,76 @@ const RightSider: React.FC = () => {
                       const columns = [...value.enumobject];
                       let dataSource: any[] = [];
                       if (selectComponents.childrens) {
-                        dataSource = selectComponents.childrens?.map((item, index) => {
-                          return {...item.props, index};
-                        });
+                        dataSource = selectComponents.childrens?.map(
+                          (item, index) => {
+                            return { ...item.props, index };
+                          }
+                        );
                       } else {
-                        dataSource = selectComponents.props[key].map((item: any, index: number) => {
-                          return {...item, index};
-                        });
+                        dataSource = selectComponents.props[key].map(
+                          (item: any, index: number) => {
+                            return { ...item, index };
+                          }
+                        );
                       }
 
-                      return <React.Fragment key={key}>
-                        <span style={{marginBottom: 8, display: "block"}}>{value.text}</span>
-                        <EditableTable childrenType={selectComponents.childrenType} id={selectComponents.id} propsKey={key} data={dataSource} columns={columns} />
-                      </React.Fragment>;
+                      return (
+                        <React.Fragment key={key}>
+                          <span style={{ marginBottom: 8, display: "block" }}>
+                            {value.text}
+                          </span>
+                          <EditableTable
+                            childrenType={selectComponents.childrenType}
+                            id={selectComponents.id}
+                            propsKey={key}
+                            data={dataSource}
+                            columns={columns}
+                          />
+                        </React.Fragment>
+                      );
+                    } else if (value.FormItemType === "Switch") {
+                      const checked = selectComponents.props[key];
+                      return (
+                        <Form.Item label={value.text} key={key}>
+                          <Switch
+                            checked={checked}
+                            onChange={(checked) => {
+                              dispatch(
+                                updateDragData({
+                                  id: selectComponents.id,
+                                  value: checked,
+                                  key,
+                                })
+                              );
+                              if (!checked) {
+                                dispatch(
+                                  updateDragData({
+                                    id: selectComponents.id,
+                                    value: "",
+                                    key: "coverImg",
+                                  })
+                                );
+                              }
+                            }}
+                          />
+                          {checked ? (
+                            <Input
+                              style={{ marginTop: 10 }}
+                              onChange={(e) => {
+                                const inputValue = e.target.value;
+                                dispatch(
+                                  updateDragData({
+                                    id: selectComponents.id,
+                                    value: inputValue,
+                                    key: "coverImg", // TODO: 动态key?
+                                  })
+                                );
+                              }}
+                              placeholder="封面图片地址"
+                            />
+                          ) : null}
+                        </Form.Item>
+                      );
                     } else {
                       return (
                         <Form.Item label={value.text} key={key}>
@@ -185,11 +267,15 @@ const RightSider: React.FC = () => {
                             if (value.enum) {
                               return (
                                 <Select
-                                  optionLabelProp={value.type === "Icon" ? "value" : "children"}
+                                  optionLabelProp={
+                                    value.type === "Icon" ? "value" : "children"
+                                  }
                                   placeholder="请选择"
                                   showSearch
                                   filterOption={(input, option) =>
-                                    String(option?.value).toLowerCase().indexOf(input.toLowerCase()) >= 0
+                                    String(option?.value)
+                                      .toLowerCase()
+                                      .indexOf(input.toLowerCase()) >= 0
                                   }
                                   value={selectComponents.props[key]}
                                   onChange={(v) => {
@@ -213,10 +299,17 @@ const RightSider: React.FC = () => {
                                     if (value.type === "Icon") {
                                       return (
                                         <Select.Option key={item} value={item}>
-                                          <div style={{display: "flex", justifyContent: "space-between"}}>
+                                          <div
+                                            style={{
+                                              display: "flex",
+                                              justifyContent: "space-between",
+                                            }}
+                                          >
                                             {String(item)}
                                             <span>
-                                              {React.createElement((antdIcons as any)[item])}
+                                              {React.createElement(
+                                                (antdIcons as any)[item]
+                                              )}
                                             </span>
                                           </div>
                                         </Select.Option>
@@ -231,8 +324,10 @@ const RightSider: React.FC = () => {
                                 </Select>
                               );
                             } else {
-                              const isJson = typeof selectComponents.props[key] === "object"
-                                && selectComponents.props[key]?.type === "json";
+                              const isJson =
+                                typeof selectComponents.props[key] ===
+                                  "object" &&
+                                selectComponents.props[key]?.type === "json";
                               return (
                                 <Input
                                   onChange={(e) => {
@@ -243,13 +338,14 @@ const RightSider: React.FC = () => {
                                         value: inputValue,
                                         key,
                                         subKey: isJson ? "value" : "",
-                                        type: value.valueType || ""
+                                        type: value.valueType || "",
                                       })
                                     );
                                   }}
-                                  value={isJson
-                                    ? selectComponents.props[key].value
-                                    : selectComponents.props[key]
+                                  value={
+                                    isJson
+                                      ? selectComponents.props[key].value
+                                      : selectComponents.props[key]
                                   }
                                 />
                               );

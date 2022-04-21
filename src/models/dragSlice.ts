@@ -46,6 +46,9 @@ const findUpdateCom = (data: any[], id: string): any => {
     }
     if (data[i].childrens && Array.isArray(data[i].childrens)) {
       com = findUpdateCom(data[i].childrens, id);
+      if (com) {
+        break;
+      }
     }
   }
   return com;
@@ -68,6 +71,7 @@ export const dragSlice = createSlice({
       }
       if (data.id && data.can_place) {
         const com = findUpdateCom(state.data, data.id);
+        console.log(com, data)
         item.parentId = data.id;
         if (com.childrens) {
           com.childrens.push(item);

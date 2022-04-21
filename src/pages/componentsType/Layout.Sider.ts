@@ -4,13 +4,14 @@ export default {
   can_place: true,
   props: {
     style: {
-      width: "300px",
       border: "1px solid #ff6600",
     },
   },
   config: {
-    style: {
-      width: "宽度",
-    },
+    width: {
+      text: "宽度",
+      type: "number",
+      defaultValue: 200
+    }
   },
 };

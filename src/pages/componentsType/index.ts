@@ -27,6 +27,7 @@ import Tag from "./Tag";
 import DatePicker from "./DatePicker";
 import Breadcrumb from "./Breadcrumb";
 import Tabs from "./Tabs";
+import Card from "./Card";
 
 export interface ComponentProps {
   id?: string;
@@ -120,7 +121,7 @@ const components: ComponentsProps[] = [
   },
   {
     group_title: "数据展示",
-    components: [Calendar, Tag, Tabs],
+    components: [Calendar, Tag, Tabs, Card],
   },
 ];
 

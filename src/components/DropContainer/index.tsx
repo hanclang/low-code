@@ -16,6 +16,7 @@ import {
 import antd from "src/pages/antdComponents";
 import DropComponent from "../DropComponent";
 import { cloneDeep } from "lodash-es";
+import needWrapper from "./wrapperType";
 
 const observerConfig = { attributes: true, };
 
@@ -245,6 +246,11 @@ const DropContainer: React.FC<any> = () => {
           : styles.draggable;
       }
 
+      if (d.type === "Card" && d.props.cover) {
+        const src = d.props.coverImg || "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
+        realProps.cover = <img alt="cover" src={src} />;
+      }
+
       let jsxElement = React.createElement(
         component,
         realProps,
@@ -255,7 +261,7 @@ const DropContainer: React.FC<any> = () => {
           : null
       );
 
-      if (d.type === "Calendar" || d.type ===  "Pagination" || d.type === "DatePicker") {
+      if (needWrapper(d.type)) {
         jsxElement = <div style={{display: "inline-block", width: "fit-content"}} onMouseOver={realProps.onMouseOver} onMouseDown={realProps.onMouseDown}>
           {jsxElement}
         </div>;

@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Layout, Button, Alert, Form, Select, Input } from "antd";
+import { Layout, Button, Alert, Form, Select, Input, message } from "antd";
 import * as antdIcons from "@ant-design/icons";
 import { useSelector, useDispatch } from "react-redux";
 
@@ -41,6 +41,10 @@ const RightSider: React.FC = () => {
             <div>
               <Button
                 onClick={() => {
+                  if (selectComponents.noDelete) {
+                    message.warn("此组件禁止删除");
+                    return ;
+                  }
                   dispatch(deleteDragComponent({id: selectComponents.id}));
                   dispatch(setSelectComponents({}));
                 }}

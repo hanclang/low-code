@@ -26,11 +26,13 @@ import Pagination from "./Pagination";
 import Tag from "./Tag";
 import DatePicker from "./DatePicker";
 import Breadcrumb from "./Breadcrumb";
+import Tabs from "./Tabs";
 
 export interface ComponentProps {
   id?: string;
   type: string;
   childrenType?: string;
+  noDelete?: boolean; // 组件是否可以删除，默认可以-为false
   title: string;
   alias?: string;
   is_native?: boolean;
@@ -118,7 +120,7 @@ const components: ComponentsProps[] = [
   },
   {
     group_title: "数据展示",
-    components: [Calendar, Tag],
+    components: [Calendar, Tag, Tabs],
   },
 ];
 

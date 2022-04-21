@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Table, Input, InputNumber, Form, Typography, Button } from "antd";
 import { useDispatch } from "react-redux";
 import { updateChildren, updateDragChildren, updateDragData } from "src/models/dragSlice";
+import div from "src/pages/componentsType/div";
 
 const EditableCell = ({
   editing,
@@ -52,13 +53,21 @@ const EditableTable = ({propsKey, data = [], columns = [], id = "", childrenType
       props[item.dataIndex] = item.dataIndex;
     });
     if (childrenType) { // 更新像select那样的组件
+      let dragData: Record<string, any> = {
+        type: childrenType,
+        noBindEvent: true,
+        props,
+      };
+      if (childrenType === "Tabs.TabPane") {
+        dragData.childrens = [{
+          ...div,
+          title: "TabPane内容",
+          noDelete: true
+        }];
+      }
       dispatch(updateChildren({
         id,
-        dragData: {
-          type: childrenType,
-          noBindEvent: true,
-          props
-        }
+        dragData
       }));
     } else {
       dispatch(updateDragData({

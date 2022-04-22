@@ -1,3 +1,4 @@
+/* eslint-disable complexity */
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useDrop } from "react-dnd";
 import classNames from "classnames";
@@ -247,7 +248,7 @@ const DropContainer: React.FC<any> = () => {
       }
 
       if (d.type === "Card" && d.props.cover) {
-        const src = d.props.coverImg || "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png"
+        const src = d.props.coverImg || "https://os.alipayobjects.com/rmsportal/QBnOOoLaAfKPirc.png";
         realProps.cover = <img alt="cover" src={src} />;
       }
 
@@ -261,8 +262,11 @@ const DropContainer: React.FC<any> = () => {
           : null
       );
 
-      if (needWrapper(d.type)) {
-        jsxElement = <div style={{display: "inline-block", width: "fit-content"}} onMouseOver={realProps.onMouseOver} onMouseDown={realProps.onMouseDown}>
+      const wrapperDiv = needWrapper(d.type);
+      if (wrapperDiv.isWrapper) {
+        jsxElement = <div style={
+          wrapperDiv.inline ? {display: "inline-block", width: "fit-content"} : {}
+        } onMouseOver={realProps.onMouseOver} onMouseDown={realProps.onMouseDown}>
           {jsxElement}
         </div>;
       }

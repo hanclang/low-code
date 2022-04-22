@@ -3,8 +3,11 @@
  * @param type
  * @returns
  */
-export default function needWrapper(type: string): boolean {
-  const types = ["Calendar", "Pagination", "DatePicker"];
+export default function needWrapper(type: string): Record<string, any> {
+  const types = ["Calendar", "Pagination", "DatePicker", "Table"];
 
-  return types.includes(type);
+  return {
+    isWrapper: types.includes(type),
+    isInline:  type !== "Table",
+  };
 }

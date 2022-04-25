@@ -53,6 +53,9 @@ const EditableTable = ({propsKey, data = [], columns = [], id = "", childrenType
       props[item.dataIndex] = item.dataIndex;
     });
     if (childrenType) { // 更新像select那样的组件
+      if (childrenType === "Image") {
+        props.preview = false;
+      }
       let dragData: Record<string, any> = {
         type: childrenType,
         noBindEvent: true,
@@ -120,6 +123,7 @@ const EditableTable = ({propsKey, data = [], columns = [], id = "", childrenType
     title: "操作",
     dataIndex: "operation",
     editable: true,
+    fixed: "right",
     render: (_: any, record: any, index: number) => {
       const editable = isEditing(record);
       return editable ? (
@@ -180,6 +184,7 @@ const EditableTable = ({propsKey, data = [], columns = [], id = "", childrenType
         columns={mergedColumns}
         rowKey="index"
         pagination={false}
+        scroll={{x: "max-content"}}
       />
       <Button onClick={add} style={{marginTop: 8}} type="primary" block>Add</Button>
     </Form>

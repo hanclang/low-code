@@ -29,6 +29,7 @@ import Breadcrumb from "./Breadcrumb";
 import Tabs from "./Tabs";
 import Card from "./Card";
 import Table from "./Table";
+import Carousel from "./Carousel";
 
 export interface ComponentProps {
   id?: string;
@@ -123,7 +124,7 @@ const components: ComponentsProps[] = [
   },
   {
     group_title: "数据展示",
-    components: [Calendar, Tag, Tabs, Card, Table],
+    components: [Calendar, Tag, Tabs, Card, Table, Carousel],
   },
 ];
 

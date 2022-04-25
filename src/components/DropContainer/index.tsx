@@ -355,7 +355,6 @@ const DropContainer: React.FC<any> = () => {
           {selectComponents.title || "Page"}
         </div>
       </div>
-      {/* TODO: 在面板里的组件怎么实现排序, 组件渲染 */}
       <div
         ref={drop}
         style={{ border: isOverCurrent ? "1px dashed red" : "" }}

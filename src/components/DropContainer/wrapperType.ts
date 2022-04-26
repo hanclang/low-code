@@ -4,10 +4,19 @@
  * @returns
  */
 export default function needWrapper(type: string): Record<string, any> {
-  const types = ["Calendar", "Pagination", "DatePicker", "Table", "Carousel"];
+  const types = [
+    "Checkbox",
+    "Calendar",
+    "Pagination",
+    "DatePicker",
+    "Table",
+    "Carousel",
+  ];
+
+  const isInlineType = ["Table", "Carousel"]; // 不需要inline-block
 
   return {
     isWrapper: types.includes(type),
-    isInline: type !== "Table",
+    isInline: !isInlineType.includes(type),
   };
 }

@@ -30,6 +30,8 @@ import Tabs from "./Tabs";
 import Card from "./Card";
 import Table from "./Table";
 import Carousel from "./Carousel";
+import Checkbox from "./Checkbox";
+import Checkbox_Group from "./Checkbox.Group";
 
 export interface ComponentProps {
   id?: string;
@@ -119,6 +121,8 @@ const components: ComponentsProps[] = [
       Input,
       Input_TextArea,
       Select,
+      Checkbox,
+      Checkbox_Group,
       DatePicker,
     ],
   },

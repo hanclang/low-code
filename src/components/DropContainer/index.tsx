@@ -265,7 +265,7 @@ const DropContainer: React.FC<any> = () => {
       const wrapperDiv = needWrapper(d.type);
       if (wrapperDiv.isWrapper) {
         jsxElement = <div style={
-          wrapperDiv.inline ? {display: "inline-block", width: "fit-content"} : {}
+          wrapperDiv.isInline ? {display: "inline-block", width: "fit-content"} : {}
         } onMouseOver={realProps.onMouseOver} onMouseDown={realProps.onMouseDown}>
           {jsxElement}
         </div>;

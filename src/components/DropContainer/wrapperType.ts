@@ -11,6 +11,7 @@ export default function needWrapper(type: string): Record<string, any> {
     "DatePicker",
     "Table",
     "Carousel",
+    "Radio.Group"
   ];
 
   const isInlineType = ["Table", "Carousel"]; // 不需要inline-block

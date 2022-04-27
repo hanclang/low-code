@@ -33,6 +33,8 @@ import Carousel from "./Carousel";
 import Checkbox from "./Checkbox";
 import Checkbox_Group from "./Checkbox.Group";
 import InputNumber from "./InputNumber";
+import Radio from "./Radio";
+import Radio_Group from "./Radio.Group";
 
 export interface ComponentProps {
   id?: string;
@@ -125,6 +127,8 @@ const components: ComponentsProps[] = [
       Select,
       Checkbox,
       Checkbox_Group,
+      Radio,
+      Radio_Group,
       DatePicker,
     ],
   },

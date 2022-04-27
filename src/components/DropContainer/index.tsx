@@ -168,7 +168,7 @@ const DropContainer: React.FC<any> = () => {
         component = getComponent(d.type.split("."));
       }
 
-      let realProps = d.props ? { ...d.props, key: d.id } : {};
+      let realProps = d.props ? { ...d.props, key: d.id } : { key: d.id };
 
       for (let key in realProps) {
         if (
@@ -263,7 +263,8 @@ const DropContainer: React.FC<any> = () => {
       );
 
       const wrapperDiv = needWrapper(d.type);
-      if (wrapperDiv.isWrapper) {
+      // Radio组件有这个属性，不用type区分，防止在Radio.Group
+      if (wrapperDiv.isWrapper || d.wrapper) {
         jsxElement = <div style={
           wrapperDiv.isInline ? {display: "inline-block", width: "fit-content"} : {}
         } onMouseOver={realProps.onMouseOver} onMouseDown={realProps.onMouseDown}>

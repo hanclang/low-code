@@ -12,7 +12,7 @@
 - ✔ Row Col
 - ✔ 布局：Layout Header Sider Content Divider Space
 - ✔ 通用：Button Icon Typography.Title Typography.Text Typography.Link Card
-- ✔ 数据录入：Switch Form Form.Item Input Input.TextArea Select Radio CheckBox
+- ✔ 数据录入：Switch Form Form.Item Input Input.TextArea Select Radio CheckBox DatePicker
 
 ![demo](https://raw.githubusercontent.com/hanclang/img-uploader/master/demo.png)
 ![代码预览](https://raw.githubusercontent.com/hanclang/img-uploader/master/%E6%97%A0%E6%A0%87%E9%A2%98.png)

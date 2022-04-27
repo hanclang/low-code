@@ -32,6 +32,7 @@ import Table from "./Table";
 import Carousel from "./Carousel";
 import Checkbox from "./Checkbox";
 import Checkbox_Group from "./Checkbox.Group";
+import InputNumber from "./InputNumber";
 
 export interface ComponentProps {
   id?: string;
@@ -120,6 +121,7 @@ const components: ComponentsProps[] = [
       Form_Item,
       Input,
       Input_TextArea,
+      InputNumber,
       Select,
       Checkbox,
       Checkbox_Group,

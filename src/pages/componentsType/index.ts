@@ -35,6 +35,7 @@ import Checkbox_Group from "./Checkbox.Group";
 import InputNumber from "./InputNumber";
 import Radio from "./Radio";
 import Radio_Group from "./Radio.Group";
+import PageHeader from "./PageHeader";
 
 export interface ComponentProps {
   id?: string;
@@ -103,7 +104,7 @@ const components: ComponentsProps[] = [
   },
   {
     group_title: "导航",
-    components: [Breadcrumb, Pagination],
+    components: [Breadcrumb, PageHeader, Pagination],
   },
   {
     group_title: "通用",

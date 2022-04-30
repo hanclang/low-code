@@ -265,7 +265,7 @@ const DropContainer: React.FC<any> = () => {
       const wrapperDiv = needWrapper(d.type);
       // Radio组件有这个属性，不用type区分，防止在Radio.Group
       if (wrapperDiv.isWrapper || d.wrapper) {
-        jsxElement = <div style={
+        jsxElement = <div className={styles.wrapperDiv} style={
           wrapperDiv.isInline ? {display: "inline-block", width: "fit-content"} : {}
         } onMouseOver={realProps.onMouseOver} onMouseDown={realProps.onMouseDown}>
           {jsxElement}

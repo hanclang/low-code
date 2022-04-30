@@ -12,10 +12,11 @@ export default function needWrapper(type: string): Record<string, any> {
     "Table",
     "Carousel",
     "Radio.Group",
-    "PageHeader"
+    "PageHeader",
+    "Steps"
   ];
 
-  const isInlineType = ["Table", "Carousel", "PageHeader"]; // 不需要inline-block
+  const isInlineType = ["Table", "Carousel", "PageHeader", "Steps"]; // 不需要inline-block
 
   return {
     isWrapper: types.includes(type),

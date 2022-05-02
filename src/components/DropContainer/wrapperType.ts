@@ -14,10 +14,18 @@ export default function needWrapper(type: string): Record<string, any> {
     "Radio.Group",
     "PageHeader",
     "Steps",
-    "Column"
+    "Column",
+    "Line",
   ];
 
-  const isInlineType = ["Table", "Carousel", "PageHeader", "Steps", "Column"]; // 不需要inline-block
+  const isInlineType = [
+    "Table",
+    "Carousel",
+    "PageHeader",
+    "Steps",
+    "Column",
+    "Line",
+  ]; // 不需要inline-block
 
   return {
     isWrapper: types.includes(type),

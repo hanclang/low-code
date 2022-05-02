@@ -1,5 +1,5 @@
 /* eslint-disable complexity */
-import React, { useEffect, useMemo, useRef, useState } from "react";
+import React, { useMemo, useRef, useState } from "react";
 import { useDrop } from "react-dnd";
 import classNames from "classnames";
 import styles from "./index.less";

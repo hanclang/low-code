@@ -38,6 +38,7 @@ import Radio_Group from "./Radio.Group";
 import PageHeader from "./PageHeader";
 import Steps from "./Steps";
 import Column from "./charts/Column";
+import Line from "./charts/Line";
 
 export interface ComponentProps {
   id?: string;
@@ -141,7 +142,7 @@ const components: ComponentsProps[] = [
   },
   {
     group_title: "图表",
-    components: [Column],
+    components: [Column, Line],
   },
 ];
 

@@ -39,6 +39,7 @@ import PageHeader from "./PageHeader";
 import Steps from "./Steps";
 import Column from "./charts/Column";
 import Line from "./charts/Line";
+import Badge from "./Badge";
 
 export interface ComponentProps {
   id?: string;
@@ -138,7 +139,7 @@ const components: ComponentsProps[] = [
   },
   {
     group_title: "数据展示",
-    components: [Calendar, Tag, Tabs, Card, Table, Carousel],
+    components: [Calendar, Tag, Tabs, Card, Badge, Table, Carousel],
   },
   {
     group_title: "图表",

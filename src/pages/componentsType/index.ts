@@ -40,6 +40,7 @@ import Steps from "./Steps";
 import Column from "./charts/Column";
 import Line from "./charts/Line";
 import Badge from "./Badge";
+import Rate from "./Rate";
 
 export interface ComponentProps {
   id?: string;
@@ -129,6 +130,7 @@ const components: ComponentsProps[] = [
       Input,
       Input_TextArea,
       InputNumber,
+      Rate,
       Select,
       Checkbox,
       Checkbox_Group,

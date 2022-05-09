@@ -17,6 +17,7 @@ export default function needWrapper(type: string): Record<string, any> {
     "Column",
     "Line",
     "Rate",
+    "Slider",
   ];
 
   const isInlineType = [
@@ -26,6 +27,7 @@ export default function needWrapper(type: string): Record<string, any> {
     "Steps",
     "Column",
     "Line",
+    "Slider",
   ]; // 不需要inline-block
 
   return {

@@ -41,6 +41,7 @@ import Column from "./charts/Column";
 import Line from "./charts/Line";
 import Badge from "./Badge";
 import Rate from "./Rate";
+import Slider from "./Slider";
 
 export interface ComponentProps {
   id?: string;
@@ -132,6 +133,7 @@ const components: ComponentsProps[] = [
       InputNumber,
       Rate,
       Select,
+      Slider,
       Checkbox,
       Checkbox_Group,
       Radio,

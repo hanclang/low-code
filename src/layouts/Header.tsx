@@ -71,8 +71,8 @@ export default Index;
             r = r.replace(`"${m}"`, renderCache[m]);
           }
           result += ` ${i}={${r}}`;
-        } else if (typeof props[i] === "function") {
-          result += `  ${i}={${props[i]}}`;
+        } else if (typeof props[i] === "object" && props[i].type === "function") {
+          result += `  ${i}={(item) => item.title}`; // Transfer
         } else {
           let noindent = JSON.stringify(props[i]);
           let indent = JSON.stringify(props[i], null, 2);

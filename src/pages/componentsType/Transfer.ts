@@ -2,7 +2,10 @@ export default {
   type: "Transfer",
   title: "穿梭框",
   props: {
-    render: (item: any) => item?.title,
+    render: {
+      value: "(item: any) => item?.title",
+      type: "function"
+    },
     dataSource: [
       {
         key: "0",

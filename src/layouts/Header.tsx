@@ -71,10 +71,12 @@ export default Index;
             r = r.replace(`"${m}"`, renderCache[m]);
           }
           result += ` ${i}={${r}}`;
+        } else if (typeof props[i] === "function") {
+          result += `  ${i}={${props[i]}}`;
         } else {
           let noindent = JSON.stringify(props[i]);
           let indent = JSON.stringify(props[i], null, 2);
-          result += ` ${i}={${noindent.length > 100 ? indent : noindent}}`;
+          result += ` ${i}={${noindent?.length > 100 ? indent : noindent}}`;
         }
       }
     }

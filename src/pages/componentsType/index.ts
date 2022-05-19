@@ -42,6 +42,7 @@ import Line from "./charts/Line";
 import Badge from "./Badge";
 import Rate from "./Rate";
 import Slider from "./Slider";
+import Transfer from "./Transfer";
 
 export interface ComponentProps {
   id?: string;
@@ -139,6 +140,7 @@ const components: ComponentsProps[] = [
       Radio,
       Radio_Group,
       DatePicker,
+      Transfer,
     ],
   },
   {

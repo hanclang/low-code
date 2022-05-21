@@ -19,6 +19,7 @@ export default function needWrapper(type: string): Record<string, any> {
     "Rate",
     "Slider",
     "Transfer",
+    "TimePicker"
   ];
 
   const isInlineType = [

@@ -43,6 +43,7 @@ import Badge from "./Badge";
 import Rate from "./Rate";
 import Slider from "./Slider";
 import Transfer from "./Transfer";
+import TimePicker from "./TimePicker";
 
 export interface ComponentProps {
   id?: string;
@@ -141,6 +142,7 @@ const components: ComponentsProps[] = [
       Radio_Group,
       DatePicker,
       Transfer,
+      TimePicker,
     ],
   },
   {

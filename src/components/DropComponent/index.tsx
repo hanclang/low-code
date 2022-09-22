@@ -6,7 +6,7 @@ import { useDispatch } from "react-redux";
 import classNames from "classnames";
 import { appendCom, moveCom, updateChildren } from "src/models/dragSlice";
 
-import styles from './index.less'
+import styles from "./index.less";
 
 interface DropComponentProps {
   id: string;
@@ -103,8 +103,8 @@ const DropComponent: React.FC<DropComponentProps> = ({ children, id, index, pare
   drap(drop(ref));
 
   return <Wrapper dropRef={ref}>
-  {// @ts-ignore
-    React.cloneElement(children, {
+  {
+    React.cloneElement(children as any, {
       className: classNames(cName, {
         [styles.border]: isOverCurrent && data.can_place,
         [styles.line]: !data.can_place,
@@ -126,7 +126,7 @@ class Wrapper extends React.PureComponent<any> {
   }
   // eslint-disable-next-line @typescript-eslint/explicit-member-accessibility
   render() {
-    return this.props.children;
+    return this.props.children as any;
   }
 }
 
